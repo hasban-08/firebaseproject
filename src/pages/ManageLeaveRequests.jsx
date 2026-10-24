@@ -1,15 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
-import {
-  collection,
-  doc,
-  getDocs,
-  orderBy,
-  query,
-  serverTimestamp,
-  updateDoc,
-} from "firebase/firestore";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { auth, db } from "../firebase";
+import { reviewLeaveRequest } from "../services/hrServer";
 import "./css/ManageLeaveRequests.css";
 
 function ManageLeaveRequests() {
@@ -24,15 +17,12 @@ function ManageLeaveRequests() {
   const loadRequests = useCallback(async () => {
     setLoading(true);
     setError("");
-
     try {
       const requestsQuery = query(
         collection(db, "leaveRequests"),
         orderBy("createdAt", "desc")
       );
-
       const snap = await getDocs(requestsQuery);
-
       setRequests(
         snap.docs.map((item) => ({
           id: item.id,
@@ -51,33 +41,23 @@ function ManageLeaveRequests() {
       navigate("/login");
       return;
     }
-
     loadRequests();
   }, [navigate, loadRequests]);
 
   async function updateRequest(request, status) {
-    if (!auth.currentUser) {
-      setError("Please log in again.");
-      return;
-    }
-
     const confirmed = window.confirm(
-      `${status === "approved" ? "Approve" : "Reject"} this request?`
+      `${status === "approved" ? "Approve" : "Reject"} this leave request?`
     );
-
     if (!confirmed) return;
 
     setBusyId(request.id);
     setError("");
-
     try {
-      await updateDoc(doc(db, "leaveRequests", request.id), {
+      await reviewLeaveRequest({
+        request,
         status,
-        adminComment: (comments[request.id] || "").trim(),
-        reviewedBy: auth.currentUser.uid,
-        reviewedAt: serverTimestamp(),
+        comment: comments[request.id] || "",
       });
-
       await loadRequests();
     } catch (err) {
       setError(err.message || "Could not update this request.");
@@ -91,24 +71,25 @@ function ManageLeaveRequests() {
       ? requests
       : requests.filter((item) => (item.status || "pending") === filter);
 
-  function requestTypeLabel(type) {
-    return type === "earlyLeave" ? "Early Leave" : "Leave";
-  }
-
   return (
     <main className="manage-leaves-page">
-      {/* Naya Topbar Header */}
       <header className="manage-leaves-topbar">
         <div className="manage-leaves-identity">
           <div className="manage-leaves-avatar">M</div>
           <div className="manage-leaves-identity-text">
-            <span className="manage-leaves-name">Leave Requests</span>
-            <span className="manage-leaves-pill">Admin Panel</span>
+            <span className="manage-leaves-name">Leave Approvals</span>
+            <span className="manage-leaves-pill">HR & Admin Panel</span>
           </div>
         </div>
         <button className="manage-leaves-back-btn" onClick={() => navigate("/")}>
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-            <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <path
+              d="M15 18l-6-6 6-6"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
           </svg>
           Back
         </button>
@@ -117,11 +98,16 @@ function ManageLeaveRequests() {
       <section className="manage-leaves-panel">
         <div className="manage-leaves-toolbar">
           <label>
-            Show
-            <select className="manage-leaves-select" value={filter} onChange={(e) => setFilter(e.target.value)}>
+            Filter Status
+            <select
+              className="manage-leaves-select"
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+            >
               <option value="pending">Pending</option>
               <option value="approved">Approved</option>
               <option value="rejected">Rejected</option>
+              <option value="cancelled">Cancelled</option>
               <option value="all">All requests</option>
             </select>
           </label>
@@ -148,12 +134,19 @@ function ManageLeaveRequests() {
               <article className="manage-leaves-card" key={request.id}>
                 <div className="manage-leaves-card-top">
                   <div className="manage-leaves-card-user">
-                    <h2>{request.employeeName || "Employee"}</h2>
+                    <h2>
+                      {request.employeeName || "Employee"}{" "}
+                      <small style={{ fontSize: "12px", color: "#a78bfa" }}>
+                        ({request.department || "General"})
+                      </small>
+                    </h2>
                     <p>{request.employeeEmail || request.uid}</p>
                   </div>
 
                   <span
-                    className={`manage-leaves-status manage-leaves-status-${request.status || "pending"}`}
+                    className={`manage-leaves-status manage-leaves-status-${
+                      request.status || "pending"
+                    }`}
                   >
                     {request.status || "pending"}
                   </span>
@@ -161,23 +154,20 @@ function ManageLeaveRequests() {
 
                 <div className="manage-leaves-card-details">
                   <p>
-                    <strong>Type: </strong>
-                    {requestTypeLabel(request.type)}
+                    <strong>Leave Type: </strong>
+                    {request.type === "earlyLeave"
+                      ? "Early Leave"
+                      : `${(request.leaveType || "annual").toUpperCase()} (${
+                          request.workingDays ?? 1
+                        } working day${request.workingDays === 1 ? "" : "s"})`}
                   </p>
 
                   <p>
                     <strong>Date: </strong>
                     {request.type === "earlyLeave"
-                      ? request.date
+                      ? `${request.date} at ${request.earlyLeaveTime}`
                       : `${request.startDate} to ${request.endDate}`}
                   </p>
-
-                  {request.type === "earlyLeave" && (
-                    <p>
-                      <strong>Expected departure: </strong>
-                      {request.earlyLeaveTime}
-                    </p>
-                  )}
 
                   <p>
                     <strong>Reason: </strong>
@@ -188,7 +178,7 @@ function ManageLeaveRequests() {
                 {request.status === "pending" && (
                   <div className="manage-leaves-review-sec">
                     <label className="manage-leaves-comment">
-                      Admin comment (optional)
+                      HR / Admin Comment
                       <textarea
                         rows={2}
                         value={comments[request.id] || ""}
@@ -198,7 +188,7 @@ function ManageLeaveRequests() {
                             [request.id]: e.target.value,
                           }))
                         }
-                        placeholder="Add a note for the employee..."
+                        placeholder="Add a decision comment for the employee..."
                       />
                     </label>
 
@@ -226,7 +216,7 @@ function ManageLeaveRequests() {
 
                 {request.adminComment && (
                   <p className="manage-leaves-admin-note">
-                    <strong>Admin comment: </strong>
+                    <strong>Decision comment: </strong>
                     {request.adminComment}
                   </p>
                 )}

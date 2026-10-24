@@ -5,6 +5,7 @@ import {
   formatTime12,
   statusLabel,
   getApprovedLeaveDates,
+  buildDefaultSchedule,
 } from "./attendanceHelpers";
 
 const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -18,24 +19,43 @@ export function formatHM12(hm = "") {
 }
 
 const emptySummary = () => ({
-  present: 0, onTime: 0, late: 0, extremeLate: 0, absent: 0, leave: 0, early: 0,
+  present: 0,
+  onTime: 0,
+  late: 0,
+  halfDay: 0,
+  missingCheckout: 0,
+  extremeLate: 0,
+  absent: 0,
+  leave: 0,
+  early: 0,
 });
 
 /**
  * Mahine ke har din ka status (aaj tak):
- * record hai -> on-time / late / extreme-late
+ * record hai -> present / late / half_day / missing_checkout
  * approved leave -> leave
- * chhutti ka din -> off
+ * chhutti ka din / public holiday -> off
  * aaj aur abhi tak check-in nahi -> pending
  * baaqi -> absent
- * Approved early leave kisi bhi din par "note" ban kar aati hai.
  */
-export function buildMonthRows({ month, schedule, records = [], leaves = [] }) {
+export function buildMonthRows({
+  month,
+  schedule,
+  records = [],
+  leaves = [],
+  publicHolidays = [],
+}) {
   const currentMonth = getLocalMonthStr();
   const monthStr = /^\d{4}-\d{2}$/.test(month) ? month : currentMonth;
   const summary = emptySummary();
 
   if (monthStr > currentMonth) return { rows: [], summary };
+
+  const effectiveSchedule = schedule || buildDefaultSchedule();
+  const holidayMap = {};
+  (publicHolidays || []).forEach((h) => {
+    if (h?.date) holidayMap[h.date] = h.name || "Public Holiday";
+  });
 
   const [year, mon] = monthStr.split("-").map(Number);
   const daysInMonth = new Date(year, mon, 0).getDate();
@@ -47,7 +67,11 @@ export function buildMonthRows({ month, schedule, records = [], leaves = [] }) {
     if (r.date && !recordByDate[r.date]) recordByDate[r.date] = r;
   });
 
-  const leaveDates = getApprovedLeaveDates(schedule, leaves);
+  const leaveDates = getApprovedLeaveDates(
+    effectiveSchedule,
+    leaves,
+    publicHolidays
+  );
 
   const earlyByDate = {};
   leaves.forEach((l) => {
@@ -62,28 +86,51 @@ export function buildMonthRows({ month, schedule, records = [], leaves = [] }) {
     const date = new Date(year, mon - 1, day);
     const dateStr = `${monthStr}-${String(day).padStart(2, "0")}`;
     const record = recordByDate[dateStr];
-    const isScheduled = !!schedule?.[getWeekdayKey(date)];
+    const isHoliday = !!holidayMap[dateStr];
+    const isScheduled =
+      !!effectiveSchedule?.[getWeekdayKey(date)] && !isHoliday;
     const early = earlyByDate[dateStr];
 
     let kind;
     let label;
     let time = null;
+    let checkOut = null;
+    let workedHours = null;
 
     if (record) {
-      kind = record.status || "on-time";
-      label = statusLabel(record);
+      const hasCheckout = !!record.checkOutTime;
+      const isPastDay = dateStr < todayStr;
+      let effectiveStatus = record.status || "present";
+      if (!hasCheckout && isPastDay && effectiveStatus !== "half_day") {
+        effectiveStatus = "missing_checkout";
+      }
+
+      kind = effectiveStatus;
+      label = statusLabel({ ...record, status: effectiveStatus });
       time = formatTime12(record.checkInTime);
+      checkOut = hasCheckout ? formatTime12(record.checkOutTime) : "—";
+      workedHours = record.workedHours ?? null;
+
       summary.present += 1;
-      if (kind === "late") summary.late += 1;
-      else if (kind === "extreme-late") summary.extremeLate += 1;
-      else summary.onTime += 1;
+      if (effectiveStatus === "late" || effectiveStatus === "extreme-late") {
+        summary.late += 1;
+      } else if (effectiveStatus === "half_day") {
+        summary.halfDay += 1;
+      } else if (effectiveStatus === "missing_checkout") {
+        summary.missingCheckout += 1;
+      } else {
+        summary.onTime += 1;
+      }
     } else if (leaveDates.has(dateStr)) {
       kind = "leave";
       label = "On leave";
       summary.leave += 1;
+    } else if (isHoliday) {
+      kind = "off";
+      label = `Holiday (${holidayMap[dateStr]})`;
     } else if (!isScheduled) {
       kind = "off";
-      label = "Day off";
+      label = "Weekend / Off";
     } else if (dateStr === todayStr) {
       kind = "pending";
       label = "Not checked in yet";
@@ -97,9 +144,20 @@ export function buildMonthRows({ month, schedule, records = [], leaves = [] }) {
     if (early) {
       summary.early += 1;
       note = `Early leave approved (${formatHM12(early.earlyLeaveTime)})`;
+    } else if (workedHours !== null) {
+      note = `Worked: ${workedHours}h`;
     }
 
-    rows.push({ date: dateStr, day: DAY_NAMES[date.getDay()], kind, label, time, note });
+    rows.push({
+      date: dateStr,
+      day: DAY_NAMES[date.getDay()],
+      kind,
+      label,
+      time,
+      checkOut,
+      workedHours,
+      note,
+    });
   }
 
   return { rows, summary };

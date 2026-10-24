@@ -1,70 +1,84 @@
-# Getting Started with Create React App
+# 🚀 WorkPulse — AI-Powered HR, Attendance, Leave & Payroll Platform
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+WorkPulse is a full-stack HR, Attendance, Leave Quota, Payroll, Analytics, and AI Assistant platform built with **React**, **Firebase (Auth & Firestore)**, **Vercel Serverless Functions (`firebase-admin`)**, **Recharts**, **jsPDF**, and **Google Gemini AI**.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## ✨ Key Capabilities Implemented
 
-### `npm start`
+### 1. Security, 3 Roles & First-Run Setup (P0)
+- **3 Distinct Roles**: `admin`, `hr`, and `employee` enforced in both UI routing (`ProtectedRoute`) and server-side `firestore.rules` + `/api/*` endpoints.
+- **First-Run Setup (`/setup`)**: If `settings/company` does not exist on a fresh install, the app automatically redirects to `/setup` to configure Company Name, Office Hours (`09:00`–`18:00`), Grace Period (`15` mins), and create the initial **Admin** account.
+- **No Public Signup**: Accounts are provisioned exclusively by **Admin** or **HR** (`/company-settings`) with a temporary password (`mustChangePassword: true`), forcing a password change on first login (`/change-password`).
+- **Field-Level Privacy**: Employees can only edit their contact info (`phone`, `address`, `dob`, `emergencyContact`). Official HR fields (`role`, `basicSalary`, `cnic`, `bankDetails`) are strictly locked to `admin` and `hr` in `firestore.rules`.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### 2. Core HR Flows — Self Check-In/Out, Quotas & Payroll (P1)
+- **Employee Self Check-In & Check-Out (`/mark-attendance`)**:
+  - Server-stamped check-in and check-out times.
+  - Duplicate check-in on the same day returns **`409 Conflict`**.
+  - Automatic statuses: `present` (`<= 09:15`), `late` (`> 09:15`), `half_day` (`< 5` worked hours on checkout), `missing_checkout`, and `absent`.
+  - **Haversine GPS Geofence** verification + optional Camera verification preview.
+- **Attendance Correction Workflow**:
+  - Employees submit correction requests with date, times, and reason (`/mark-attendance`).
+  - HR/Admin reviews and approves/rejects requests (`/daily-attendance`), automatically updating attendance and logging to `audit_logs`.
+- **Leave Engine with Quotas & Working Days (`/leave-request` & `/manage-leaves`)**:
+  - Quotas: **Annual (14)**, **Sick (8)**, **Casual (10)**, **Unpaid (Unlimited)**.
+  - Automatically skips weekends (`Sat`/`Sun`) and configured `public_holidays` when counting working days.
+  - Returns **`422 Unprocessable Entity`** on overlapping leave dates or insufficient quota balance.
+  - Employees can cancel pending requests; HR/Admin can approve/reject with comments.
+- **Structured Payroll Engine & Payslip PDF (`/manage-salary`)**:
+  - Salary structure: `Gross Salary = 1.5 × Basic Salary` (`Basic` + `30% HRA` + `10% Medical` + `10% Conveyance`).
+  - Deductions: `Per-Day Rate = Gross / Working Days`, deducting `Absent` days, `Unpaid` leave days, `Half-Days (0.5d)`, and Bonus Late Penalty (`3 lates = 0.5 day`), plus progressive **FBR Income Tax Slabs**.
+  - Workflow: **Generate Monthly Draft** → **Admin Finalize & Lock** (`status = "locked"`).
+  - **Official Payslip PDF**: Every employee can download their formatted monthly Payslip PDF.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### 3. Server-Computed Analytics & Recharts Dashboards (P2)
+- **Admin / HR Dashboard (`/`)**:
+  - Date range and Department filters.
+  - 5 KPI Cards: Total Headcount, Present Today, On Leave Today, Late Today, Pending Approvals.
+  - **Recharts Visualizations**: Attendance Trend Area Chart, Absenteeism by Department Bar Chart, and Top-5 Late-Comers leaderboard.
+- **Employee Personal Dashboard (`/`)**:
+  - Weekly hours worked vs `40h` target progress bar, Leave Quota balance cards, Latest Payslip summary with PDF download, and Quick Check-In/Out widget.
 
-### `npm test`
+### 4. Gemini AI Assistant & Smart Workflows (P3)
+- **Tool-Calling HR Assistant (`/ai-assistant` & `/api/ai-chat`)**:
+  - Role-scoped tools: `get_headcount`, `get_attendance_summary`, `get_late_comers`, `get_leave_summary`, `get_my_leave_balance`, `get_payroll_summary`, `search_employees`.
+  - Understands **English** and **Roman Urdu**.
+- **Dashboard Executive Summarizer**: Generates 3–5 bullet points strictly from the computed dashboard metrics.
+- **Smart Leave NLP Parser**: Converts natural language / Roman Urdu (e.g., *"agle Monday Tuesday off chahiye, shaadi hai"*) into pre-filled leave form fields for user confirmation.
+- **Guardrails**: Server-side `GEMINI_API_KEY`, 15-second timeout, 20 requests/hour rate limit tracked in `ai_logs`, and `AI-generated` labels.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 5. Communications & Immutable Audit Trail (P4)
+- **Company Announcements** & **In-App Notifications** (bell icon alerts on leave decisions and payslip lock).
+- **Immutable Audit Logs (`/audit-logs`)**: Tracks `actor`, `action`, `entity`, and `before`/`after` JSON snapshots, with `allow update, delete: if false;` in `firestore.rules`.
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 🛠️ Local Setup & Running Instructions
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+2. **Configure Environment Variables**:
+   Copy `.env.example` to `.env` and fill in your Firebase project credentials and `GEMINI_API_KEY`.
 
-### `npm run eject`
+3. **Run Development Server**:
+   ```bash
+   npm start
+   ```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+4. **First-Run Setup (Fresh Install)**:
+   - Open `http://localhost:3000/setup` (or if `settings/company` is empty, the app redirects automatically).
+   - Enter your Company Name, Office Timings, and create the first **Admin** account.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+5. **Run Unit Tests**:
+   ```bash
+   npm test -- --watchAll=false
+   ```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+6. **Deploy Firestore Security Rules**:
+   ```bash
+   firebase deploy --only firestore:rules
+   ```

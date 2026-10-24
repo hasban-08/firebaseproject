@@ -13,8 +13,8 @@ import {
 import "./css/MyAttendance.css";
 
 function kindClass(kind) {
-  if (kind === "extreme-late") return "status-extreme-late";
-  if (kind === "late") return "status-late";
+  if (kind === "extreme-late" || kind === "missing_checkout") return "status-extreme-late";
+  if (kind === "late" || kind === "half_day") return "status-late";
   if (kind === "absent") return "status-absent";
   if (kind === "leave") return "status-leave";
   if (kind === "pending") return "status-pending";
@@ -28,6 +28,7 @@ function MyAttendance() {
   const [schedule, setSchedule] = useState(null);
   const [records, setRecords] = useState([]);
   const [leaves, setLeaves] = useState([]);
+  const [holidays, setHolidays] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [selectedMonth, setSelectedMonth] = useState(currentMonth);
@@ -42,18 +43,23 @@ function MyAttendance() {
       try {
         const uid = auth.currentUser.uid;
 
-        const [userSnap, attSnap, leaveSnap] = await Promise.all([
+        const [userSnap, attSnap, leaveSnap, holSnap] = await Promise.all([
           getDoc(doc(db, "users", uid)),
-          getDocs(query(
-            collection(db, "attendance"),
-            where("uid", "==", uid),
-            where("month", "==", selectedMonth)
-          )),
-          getDocs(query(
-            collection(db, "leaveRequests"),
-            where("uid", "==", uid),
-            where("status", "==", "approved")
-          )),
+          getDocs(
+            query(
+              collection(db, "attendance"),
+              where("uid", "==", uid),
+              where("month", "==", selectedMonth)
+            )
+          ),
+          getDocs(
+            query(
+              collection(db, "leaveRequests"),
+              where("uid", "==", uid),
+              where("status", "==", "approved")
+            )
+          ),
+          getDocs(collection(db, "public_holidays")),
         ]);
         if (cancelled) return;
 
@@ -62,6 +68,7 @@ function MyAttendance() {
         setSchedule(userData.schedule || null);
         setRecords(attSnap.docs.map((d) => d.data()));
         setLeaves(leaveSnap.docs.map((d) => d.data()));
+        setHolidays(holSnap.docs.map((d) => d.data()));
       } catch (err) {
         if (err?.name !== "AbortError" && !cancelled) setError(err.message);
       } finally {
@@ -70,22 +77,30 @@ function MyAttendance() {
     };
 
     fetchData();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [selectedMonth]);
 
   const { rows, summary } = loading
     ? { rows: [], summary: null }
-    : buildMonthRows({ month: selectedMonth, schedule, records, leaves });
+    : buildMonthRows({
+        month: selectedMonth,
+        schedule,
+        records,
+        leaves,
+        publicHolidays: holidays,
+      });
 
   const stats = summary
     ? [
         ["Present", summary.present],
         ["On time", summary.onTime],
-        ["Late", summary.late],
-        ["Extreme late", summary.extremeLate],
+        ["Late (>09:15)", summary.late],
+        ["Half-Day (<5h)", summary.halfDay],
+        ["Missing Out", summary.missingCheckout],
         ["Absent", summary.absent],
-        ["Leave", summary.leave],
-        ["Early leave", summary.early],
+        ["On Leave", summary.leave],
       ]
     : [];
 
@@ -105,20 +120,25 @@ function MyAttendance() {
             <span className="my-attendance-month-pill">{selectedMonth}</span>
           </div>
         </div>
-        <button className="my-attendance-back-btn" onClick={() => navigate("/")}>
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-            <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-          Back
-        </button>
+        <div style={{ display: "flex", gap: "8px" }}>
+          <button
+            className="my-attendance-back-btn"
+            onClick={() => navigate("/mark-attendance")}
+          >
+            Self Check-In / Correction
+          </button>
+          <button className="my-attendance-back-btn" onClick={() => navigate("/")}>
+            ← Back
+          </button>
+        </div>
       </header>
 
       <section className="my-attendance-hero">
         <div className="my-attendance-hero-glow" />
-        <p className="my-attendance-hero-date">Monthly record</p>
-        <h1 className="my-attendance-hero-title">Your attendance history</h1>
+        <p className="my-attendance-hero-date">Monthly Attendance Record</p>
+        <h1 className="my-attendance-hero-title">Your Attendance History</h1>
         <p className="my-attendance-hero-sub">
-          Check-in, late, leave aur early leave, sab ek jagah.
+          Present, Late (&gt;09:15), Half-Day (&lt;5h), Missing Checkout, Absent & Approved Leaves.
         </p>
       </section>
 
@@ -137,9 +157,23 @@ function MyAttendance() {
             {rows.length > 0 && (
               <div className="my-attendance-export-bar">
                 <button onClick={() => exportMonthToCSV(rows, fileName)}>CSV</button>
-                <button onClick={() => exportMonthToExcel(rows, fileName)}>Excel</button>
-                <button onClick={() => exportMonthToPDF(rows, fileName, `${userName || "My"} attendance - ${selectedMonth}`)}>PDF</button>
-                <button onClick={() => printElement("my-attendance-table")}>Print</button>
+                <button onClick={() => exportMonthToExcel(rows, fileName)}>
+                  Excel
+                </button>
+                <button
+                  onClick={() =>
+                    exportMonthToPDF(
+                      rows,
+                      fileName,
+                      `${userName || "My"} attendance - ${selectedMonth}`
+                    )
+                  }
+                >
+                  PDF
+                </button>
+                <button onClick={() => printElement("my-attendance-table")}>
+                  Print
+                </button>
               </div>
             )}
           </div>
@@ -159,7 +193,7 @@ function MyAttendance() {
             {loading ? (
               <p className="my-attendance-loading">Loading...</p>
             ) : rows.length === 0 ? (
-              <p className="my-attendance-loading">Is mahine ka koi record nahi.</p>
+              <p className="my-attendance-loading">No records for this month.</p>
             ) : (
               <div id="my-attendance-table">
                 <table className="my-attendance-table">
@@ -167,7 +201,8 @@ function MyAttendance() {
                     <tr>
                       <th>Date</th>
                       <th>Day</th>
-                      <th>Check-in</th>
+                      <th>Check-In</th>
+                      <th>Check-Out</th>
                       <th>Status</th>
                       <th>Notes</th>
                     </tr>
@@ -178,6 +213,7 @@ function MyAttendance() {
                         <td>{r.date}</td>
                         <td>{r.day}</td>
                         <td>{r.time || "—"}</td>
+                        <td>{r.checkOut || "—"}</td>
                         <td className={kindClass(r.kind)}>{r.label}</td>
                         <td>{r.note || "—"}</td>
                       </tr>

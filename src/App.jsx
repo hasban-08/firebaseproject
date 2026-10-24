@@ -3,11 +3,14 @@ import { useState, useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase";
 
-import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import Home from "./pages/Home";
-import CreatePostPage from "./pages/CreatePostPage";
+import FirstRunSetup from "./pages/FirstRunSetup";
+import ForceChangePassword from "./pages/ForceChangePassword";
+import CompanySettings from "./pages/CompanySettings";
+import AiAssistant from "./pages/AiAssistant";
+import AuditLogs from "./pages/AuditLogs";
 
 import MarkAttendance from "./pages/MarkAttendance";
 import MyAttendance from "./pages/MyAttendance";
@@ -23,7 +26,6 @@ import ProfileGate from "./components/ProfileGate";
 import LeaveRequest from "./pages/LeaveRequest";
 import ManageLeaveRequests from "./pages/ManageLeaveRequests";
 
-
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -37,88 +39,171 @@ function App() {
     return () => unsub();
   }, []);
 
-  if (loading) return <h2>Loading...</h2>;
+  if (loading) {
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          background: "#09090b",
+          color: "#cbd5e1",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: "15px",
+        }}
+      >
+        Loading WorkPulse HR Portal...
+      </div>
+    );
+  }
 
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/setup" element={<FirstRunSetup />} />
 
         {user ? (
           <>
+            <Route path="/change-password" element={<ForceChangePassword />} />
             <Route path="/complete-profile" element={<CompleteProfile />} />
 
-            <Route path="/" element={<ProfileGate><Home /></ProfileGate>} />
-            <Route path="/profile" element={<ProfileGate><Profile /></ProfileGate>} />
-            <Route path="/create-post" element={<ProfileGate><CreatePostPage /></ProfileGate>} />
-
-            <Route path="/mark-attendance" element={<ProfileGate><MarkAttendance /></ProfileGate>} />
-            <Route path="/my-attendance" element={<ProfileGate><MyAttendance /></ProfileGate>} />
-
-            <Route path="/employee-attendance" element={
-              <ProfileGate>
-                <ProtectedRoute adminOnly>
-                  <AdminAttendance />
-                </ProtectedRoute>
-              </ProfileGate>
-            } />
-            <Route path="/manage-schedule" element={
-              <ProfileGate>
-                <ProtectedRoute adminOnly>
-                  <ManageSchedule />
-                </ProtectedRoute>
-              </ProfileGate>
-            } />
-            <Route path="/manage-salary" element={
-              <ProfileGate>
-                <ProtectedRoute adminOnly>
-                  <ManageSalary />
-                </ProtectedRoute>
-              </ProfileGate>
-            } />
-            <Route path="/daily-attendance" element={
-              <ProfileGate>
-                <ProtectedRoute adminOnly>
-                  <DailyAttendance />
-                </ProtectedRoute>
-              </ProfileGate>
-            } />  
-
+            <Route
+              path="/"
+              element={
+                <ProfileGate>
+                  <Home />
+                </ProfileGate>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <ProfileGate>
+                  <Profile />
+                </ProfileGate>
+              }
+            />
+            <Route
+              path="/mark-attendance"
+              element={
+                <ProfileGate>
+                  <MarkAttendance />
+                </ProfileGate>
+              }
+            />
+            <Route
+              path="/my-attendance"
+              element={
+                <ProfileGate>
+                  <MyAttendance />
+                </ProfileGate>
+              }
+            />
             <Route
               path="/leave-request"
               element={
-                <ProtectedRoute>
-                  <ProfileGate>
-                    <LeaveRequest />
-                  </ProfileGate>
-                </ProtectedRoute>
+                <ProfileGate>
+                  <LeaveRequest />
+                </ProfileGate>
+              }
+            />
+            <Route
+              path="/manage-salary"
+              element={
+                <ProfileGate>
+                  <ManageSalary />
+                </ProfileGate>
+              }
+            />
+            <Route
+              path="/my-payslips"
+              element={
+                <ProfileGate>
+                  <ManageSalary />
+                </ProfileGate>
+              }
+            />
+            <Route
+              path="/ai-assistant"
+              element={
+                <ProfileGate>
+                  <AiAssistant />
+                </ProfileGate>
               }
             />
 
+            {/* HR & Admin Protected Routes */}
+            <Route
+              path="/company-settings"
+              element={
+                <ProfileGate>
+                  <ProtectedRoute hrOrAdmin>
+                    <CompanySettings />
+                  </ProtectedRoute>
+                </ProfileGate>
+              }
+            />
+            <Route
+              path="/employee-attendance"
+              element={
+                <ProfileGate>
+                  <ProtectedRoute hrOrAdmin>
+                    <AdminAttendance />
+                  </ProtectedRoute>
+                </ProfileGate>
+              }
+            />
+            <Route
+              path="/manage-schedule"
+              element={
+                <ProfileGate>
+                  <ProtectedRoute hrOrAdmin>
+                    <ManageSchedule />
+                  </ProtectedRoute>
+                </ProfileGate>
+              }
+            />
+            <Route
+              path="/daily-attendance"
+              element={
+                <ProfileGate>
+                  <ProtectedRoute hrOrAdmin>
+                    <DailyAttendance />
+                  </ProtectedRoute>
+                </ProfileGate>
+              }
+            />
             <Route
               path="/manage-leaves"
               element={
-                <ProtectedRoute>
-                  <ProfileGate>
+                <ProfileGate>
+                  <ProtectedRoute hrOrAdmin>
                     <ManageLeaveRequests />
-                  </ProfileGate>
-                </ProtectedRoute>
+                  </ProtectedRoute>
+                </ProfileGate>
               }
             />
-
+            <Route
+              path="/audit-logs"
+              element={
+                <ProfileGate>
+                  <ProtectedRoute hrOrAdmin>
+                    <AuditLogs />
+                  </ProtectedRoute>
+                </ProfileGate>
+              }
+            />
 
             <Route path="/login" element={<Navigate to="/" replace />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </>
         ) : (
           <>
-            <Route path="/" element={<Signup />} />
+            <Route path="/" element={<Login />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/home" element={<Navigate to="/login" replace />} />
-            <Route path="/profile" element={<Navigate to="/login" replace />} />
             <Route path="*" element={<Navigate to="/login" replace />} />
           </>
         )}
-
       </Routes>
     </BrowserRouter>
   );

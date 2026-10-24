@@ -1,0 +1,183 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function currentUserDoc() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+
+    function userRole() {
+      return isSignedIn() && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        ? currentUserDoc().data.role
+        : null;
+    }
+
+    function isAdmin() {
+      return userRole() == "admin";
+    }
+
+    function isHR() {
+      return userRole() == "hr";
+    }
+
+    function isAdminOrHR() {
+      return isAdmin() || isHR();
+    }
+
+    function isSetupPending() {
+      return !exists(/databases/$(database)/documents/settings/company);
+    }
+
+    // 1. Users Collection (CNIC, Bank & Salary protected)
+    match /users/{userId} {
+      allow read: if isSignedIn() && (request.auth.uid == userId || isAdminOrHR());
+
+      allow create: if isSignedIn() && (
+        isAdmin() ||
+        (isHR() && request.resource.data.role == "employee") ||
+        (isSetupPending() && request.auth.uid == userId && request.resource.data.role == "admin") ||
+        (request.auth.uid == userId && request.resource.data.role == "employee" && request.resource.data.salary == 0)
+      );
+
+      allow update: if isSignedIn() && (
+        isAdmin() ||
+        (isHR() && resource.data.role != "admin" && request.resource.data.role != "admin") ||
+        (
+          request.auth.uid == userId &&
+          request.resource.data.role == resource.data.role &&
+          request.resource.data.salary == resource.data.salary &&
+          request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(["name", "personalInfo", "emergencyContact", "profileComplete", "mustChangePassword", "updatedAt"])
+        )
+      );
+
+      allow delete: if isAdmin();
+    }
+
+    // 2. Company Settings (readable to check First-Run Setup)
+    match /settings/{docId} {
+      allow read: if true;
+      allow create: if isSignedIn() && (isAdminOrHR() || isSetupPending());
+      allow update: if isSignedIn() && isAdminOrHR();
+      allow delete: if isAdmin();
+    }
+
+    // 3. Master Data: Departments, Designations, Public Holidays, Leave Types
+    match /departments/{docId} {
+      allow read: if isSignedIn();
+      allow write: if isAdminOrHR();
+    }
+
+    match /designations/{docId} {
+      allow read: if isSignedIn();
+      allow write: if isAdminOrHR();
+    }
+
+    match /public_holidays/{docId} {
+      allow read: if isSignedIn();
+      allow write: if isAdminOrHR();
+    }
+
+    match /leave_types/{docId} {
+      allow read: if isSignedIn();
+      allow write: if isAdminOrHR();
+    }
+
+    // 4. Attendance (1 record per employee per day: {uid}_{YYYY-MM-DD})
+    match /attendance/{attId} {
+      allow read: if isSignedIn() && (
+        isAdminOrHR() ||
+        resource.data.uid == request.auth.uid ||
+        attId.matches("^" + request.auth.uid + "_.*")
+      );
+
+      allow create: if isSignedIn() && (
+        isAdminOrHR() ||
+        (
+          request.resource.data.uid == request.auth.uid &&
+          attId == (request.auth.uid + "_" + request.resource.data.date)
+        )
+      );
+
+      allow update: if isSignedIn() && (
+        isAdminOrHR() ||
+        (
+          resource.data.uid == request.auth.uid &&
+          resource.data.checkOutTime == null &&
+          request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(["checkOutTime", "workedHours", "status", "updatedAt"])
+        )
+      );
+
+      allow delete: if isAdmin();
+    }
+
+    // 5. Attendance Correction Requests
+    match /attendance_corrections/{corrId} {
+      allow read: if isSignedIn() && (isAdminOrHR() || resource.data.uid == request.auth.uid);
+      allow create: if isSignedIn() && request.resource.data.uid == request.auth.uid;
+      allow update: if isSignedIn() && isAdminOrHR();
+      allow delete: if isAdmin();
+    }
+
+    // 6. Leave Requests
+    match /leaveRequests/{leaveId} {
+      allow read: if isSignedIn() && (isAdminOrHR() || resource.data.uid == request.auth.uid);
+      allow create: if isSignedIn() && request.resource.data.uid == request.auth.uid && request.resource.data.status == "pending";
+      allow update: if isSignedIn() && (
+        isAdminOrHR() ||
+        (
+          resource.data.uid == request.auth.uid &&
+          resource.data.status == "pending" &&
+          request.resource.data.status == "cancelled" &&
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(["status", "cancelledAt"])
+        )
+      );
+      allow delete: if isAdmin();
+    }
+
+    // 7. Payroll Runs & Payslips (Locked payrolls cannot be edited)
+    match /payrolls/{payrollId} {
+      allow read: if isSignedIn() && (isAdminOrHR() || resource.data.uid == request.auth.uid);
+      allow create: if isSignedIn() && isAdminOrHR();
+      allow update: if isSignedIn() && (
+        (isAdminOrHR() && resource.data.status != "locked") ||
+        (isAdmin() && resource.data.status == "draft" && request.resource.data.status == "locked")
+      );
+      allow delete: if isAdmin() && resource.data.status != "locked";
+    }
+
+    // 8. Announcements & Notifications
+    match /announcements/{annId} {
+      allow read: if isSignedIn();
+      allow write: if isAdminOrHR();
+    }
+
+    match /notifications/{notifId} {
+      allow read: if isSignedIn() && (resource.data.uid == request.auth.uid || isAdminOrHR());
+      allow create: if isSignedIn();
+      allow update: if isSignedIn() && (
+        isAdminOrHR() ||
+        (resource.data.uid == request.auth.uid && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["read", "readAt"]))
+      );
+      allow delete: if isAdmin();
+    }
+
+    // 9. Immutable Audit Logs & AI Logs
+    match /audit_logs/{logId} {
+      allow read: if isSignedIn() && isAdminOrHR();
+      allow create: if isSignedIn();
+      allow update, delete: if false;
+    }
+
+    match /ai_logs/{logId} {
+      allow read: if isSignedIn() && (isAdminOrHR() || resource.data.uid == request.auth.uid);
+      allow create: if isSignedIn();
+      allow update, delete: if false;
+    }
+  }
+}

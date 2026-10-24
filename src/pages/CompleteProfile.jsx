@@ -1,22 +1,36 @@
 import { useEffect, useState } from "react";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc, serverTimestamp } from "firebase/firestore";
 import { db, auth } from "../firebase";
 import { useNavigate, useLocation } from "react-router-dom";
 import { getLocalDateStr } from "../utils/attendanceHelpers";
 import {
   formatCnic,
-  isValidCnic,
   normalizePkMobile,
-  isValidIban,
   isValidDob,
 } from "../utils/validators";
 import "./css/CompleteProfile.css";
 
 function CompleteProfile() {
+  const [role, setRole] = useState("employee");
+  const [hrInfo, setHrInfo] = useState({
+    department: "General",
+    designation: "Staff",
+    basicSalary: 0,
+    cnic: "",
+    bankMethod: "bank",
+    providerName: "",
+    accountTitle: "",
+    accountNumber: "",
+    iban: "",
+  });
   const [form, setForm] = useState({
-    fullName: "", cnic: "", dob: "", address: "", phone: "",
-    method: "bank", providerName: "", accountTitle: "", accountNumber: "", iban: "",
-    emergencyName: "", emergencyRelation: "", emergencyPhone: "",
+    fullName: "",
+    dob: "1998-01-01",
+    address: "",
+    phone: "",
+    emergencyName: "",
+    emergencyRelation: "",
+    emergencyPhone: "",
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(true);
@@ -27,25 +41,31 @@ function CompleteProfile() {
 
   useEffect(() => {
     const fetchExisting = async () => {
+      if (!auth.currentUser) return;
       const snap = await getDoc(doc(db, "users", auth.currentUser.uid));
       if (snap.exists()) {
         const data = snap.data();
-        setForm((prev) => ({
-          ...prev,
-          fullName: data.personalInfo?.fullName || data.name || "",
+        setRole(data.role || "employee");
+        setHrInfo({
+          department: data.department || "General",
+          designation: data.designation || "Staff",
+          basicSalary: data.basicSalary ?? data.salary ?? 0,
           cnic: formatCnic(data.personalInfo?.cnic || ""),
-          dob: data.personalInfo?.dob || "",
+          bankMethod: data.bankDetails?.method || "bank",
+          providerName: data.bankDetails?.providerName || "—",
+          accountTitle: data.bankDetails?.accountTitle || data.name || "—",
+          accountNumber: data.bankDetails?.accountNumber || "—",
+          iban: data.bankDetails?.iban || "",
+        });
+        setForm({
+          fullName: data.personalInfo?.fullName || data.name || "",
+          dob: data.personalInfo?.dob || "1998-01-01",
           address: data.personalInfo?.address || "",
           phone: data.personalInfo?.phone || "",
-          method: data.bankDetails?.method || "bank",
-          providerName: data.bankDetails?.providerName || "",
-          accountTitle: data.bankDetails?.accountTitle || "",
-          accountNumber: data.bankDetails?.accountNumber || "",
-          iban: data.bankDetails?.iban || "",
           emergencyName: data.emergencyContact?.name || "",
           emergencyRelation: data.emergencyContact?.relation || "",
           emergencyPhone: data.emergencyContact?.phone || "",
-        }));
+        });
       }
       setLoading(false);
     };
@@ -53,43 +73,27 @@ function CompleteProfile() {
   }, []);
 
   const handleChange = (field, value) => {
-    const v = field === "cnic" ? formatCnic(value) : value;
-    setForm((prev) => ({ ...prev, [field]: v }));
+    setForm((prev) => ({ ...prev, [field]: value }));
     setErrors((prev) => ({ ...prev, [field]: "" }));
   };
 
   const validate = () => {
     const e = {};
+    if (form.fullName.trim().length < 3) e.fullName = "Full name is required";
+    if (!isValidDob(form.dob)) e.dob = "Please select a valid date of birth (min age 16)";
+    if (!normalizePkMobile(form.phone))
+      e.phone = "Enter valid mobile number (03XX-XXXXXXX)";
+    if (form.address.trim().length < 6)
+      e.address = "Please enter your complete residential address";
 
-    if (form.fullName.trim().length < 3) e.fullName = "Poora naam likho";
-    if (!isValidCnic(form.cnic)) e.cnic = "CNIC 13 digits ka hona chahiye (XXXXX-XXXXXXX-X)";
-    if (!isValidDob(form.dob)) e.dob = "Sahi date of birth select karo (kam az kam 16 saal umar)";
-    if (!normalizePkMobile(form.phone)) e.phone = "Sahi mobile number likho (03XX-XXXXXXX)";
-    if (form.address.trim().length < 10) e.address = "Poora address likho";
-
-    if (!form.providerName.trim()) {
-      e.providerName = form.method === "bank" ? "Bank ka naam likho" : "Wallet ka naam likho";
-    }
-    if (form.accountTitle.trim().length < 3) e.accountTitle = "Account holder ka naam likho";
-
-    if (form.method === "bank") {
-      if (form.accountNumber.replace(/\s/g, "").length < 6) {
-        e.accountNumber = "Sahi account number likho";
-      }
-      if (form.iban.trim() && !isValidIban(form.iban)) {
-        e.iban = "IBAN sahi nahi (PK + 22 characters, checksum match nahi hua)";
-      }
-    } else if (!normalizePkMobile(form.accountNumber)) {
-      e.accountNumber = "Wallet ka sahi mobile number likho (03XX-XXXXXXX)";
-    }
-
-    if (form.emergencyName.trim().length < 3) e.emergencyName = "Emergency contact ka naam likho";
-    if (!form.emergencyRelation) e.emergencyRelation = "Rishta select karo";
+    if (form.emergencyName.trim().length < 3)
+      e.emergencyName = "Emergency contact name is required";
+    if (!form.emergencyRelation) e.emergencyRelation = "Select relation";
     const emergencyPhone = normalizePkMobile(form.emergencyPhone);
     if (!emergencyPhone) {
-      e.emergencyPhone = "Sahi mobile number likho (03XX-XXXXXXX)";
+      e.emergencyPhone = "Enter valid mobile number (03XX-XXXXXXX)";
     } else if (emergencyPhone === normalizePkMobile(form.phone)) {
-      e.emergencyPhone = "Ye apna number nahi, kisi family member ka hona chahiye";
+      e.emergencyPhone = "Emergency number must belong to a family member, not your own phone";
     }
 
     setErrors(e);
@@ -101,26 +105,17 @@ function CompleteProfile() {
 
     setSaving(true);
     try {
+      const snap = await getDoc(doc(db, "users", auth.currentUser.uid));
+      const existingPersonal = snap.exists() ? snap.data().personalInfo || {} : {};
+
       await updateDoc(doc(db, "users", auth.currentUser.uid), {
+        name: form.fullName.trim(),
         personalInfo: {
+          ...existingPersonal,
           fullName: form.fullName.trim(),
-          cnic: form.cnic,
           dob: form.dob,
           address: form.address.trim(),
           phone: normalizePkMobile(form.phone),
-        },
-        bankDetails: {
-          method: form.method,
-          providerName: form.providerName.trim(),
-          accountTitle: form.accountTitle.trim(),
-          accountNumber:
-            form.method === "bank"
-              ? form.accountNumber.trim()
-              : normalizePkMobile(form.accountNumber),
-          iban:
-            form.method === "bank"
-              ? form.iban.replace(/\s+/g, "").toUpperCase()
-              : "",
         },
         emergencyContact: {
           name: form.emergencyName.trim(),
@@ -128,17 +123,11 @@ function CompleteProfile() {
           phone: normalizePkMobile(form.emergencyPhone),
         },
         profileComplete: true,
+        updatedAt: serverTimestamp(),
       });
-      alert("Profile completed");
       navigate("/");
     } catch (error) {
-      console.error("CompleteProfile save error:", {
-        code: error.code,
-        message: error.message,
-        uid: auth.currentUser?.uid,
-      });
-
-      alert(`${error.code}: ${error.message}`);
+      window.alert(`${error.code || "Error"}: ${error.message}`);
     } finally {
       setSaving(false);
     }
@@ -155,41 +144,54 @@ function CompleteProfile() {
               <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2" />
               <path d="M12 8v5M12 16h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
             </svg>
-            Please complete your profile before you can continue.
+            Please complete your contact & emergency details before continuing.
           </div>
         )}
 
-        <h1 className="cp-title">Complete your profile</h1>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <h1 className="cp-title">My Profile & Contact Info</h1>
+          <button
+            type="button"
+            onClick={() => navigate("/")}
+            style={{
+              padding: "7px 14px",
+              borderRadius: "8px",
+              border: "1px solid rgba(255,255,255,0.15)",
+              background: "transparent",
+              color: "#cbd5e1",
+              cursor: "pointer",
+            }}
+          >
+            Back
+          </button>
+        </div>
         <p className="cp-sub">
-          We need a few details to set up your payroll and records.
+          Update your phone number, residential address, and emergency contact. Official HR records (CNIC, Bank Account, and Salary Structure) are managed by HR/Admin.
         </p>
 
-        <h2 className="cp-section-title">Personal Details</h2>
+        <h2 className="cp-section-title">Editable Personal & Contact Details</h2>
         <div className="cp-fields">
-          <label>Full Name
-            <input value={form.fullName} onChange={(e) => handleChange("fullName", e.target.value)} />
+          <label>
+            Full Name
+            <input
+              value={form.fullName}
+              onChange={(e) => handleChange("fullName", e.target.value)}
+            />
             {errors.fullName && <span className="cp-error">{errors.fullName}</span>}
           </label>
-          <label>CNIC
-            <input
-              inputMode="numeric"
-              placeholder="XXXXX-XXXXXXX-X"
-              value={form.cnic}
-              onChange={(e) => handleChange("cnic", e.target.value)}
-            />
-            {errors.cnic && <span className="cp-error">{errors.cnic}</span>}
-          </label>
-          <label>Date of Birth
+          <label>
+            Date of Birth
             <input
               type="date"
-              min="1930-01-01"
+              min="1940-01-01"
               max={getLocalDateStr()}
               value={form.dob}
               onChange={(e) => handleChange("dob", e.target.value)}
             />
             {errors.dob && <span className="cp-error">{errors.dob}</span>}
           </label>
-          <label>Phone Number
+          <label className="cp-full-width">
+            Phone Number *
             <input
               inputMode="tel"
               placeholder="03XX-XXXXXXX"
@@ -198,62 +200,37 @@ function CompleteProfile() {
             />
             {errors.phone && <span className="cp-error">{errors.phone}</span>}
           </label>
-          <label className="cp-full-width">Address
-            <textarea value={form.address} onChange={(e) => handleChange("address", e.target.value)} />
+          <label className="cp-full-width">
+            Residential Address *
+            <textarea
+              value={form.address}
+              onChange={(e) => handleChange("address", e.target.value)}
+            />
             {errors.address && <span className="cp-error">{errors.address}</span>}
           </label>
         </div>
 
-        <h2 className="cp-section-title">Payment Details</h2>
-        <div className="cp-fields">
-          <label>Payment Method
-            <select value={form.method} onChange={(e) => handleChange("method", e.target.value)}>
-              <option value="bank">Bank Transfer</option>
-              <option value="jazzcash">JazzCash</option>
-              <option value="easypaisa">Easypaisa</option>
-            </select>
-          </label>
-          <label>
-            {form.method === "bank" ? "Bank Name" : "Wallet Name"}
-            <input value={form.providerName} onChange={(e) => handleChange("providerName", e.target.value)} />
-            {errors.providerName && <span className="cp-error">{errors.providerName}</span>}
-          </label>
-          <label>Account Holder Name
-            <input value={form.accountTitle} onChange={(e) => handleChange("accountTitle", e.target.value)} />
-            {errors.accountTitle && <span className="cp-error">{errors.accountTitle}</span>}
-          </label>
-          <label>
-            {form.method === "bank" ? "Account Number" : "Wallet Mobile Number"}
-            <input
-              placeholder={form.method === "bank" ? "" : "03XX-XXXXXXX"}
-              value={form.accountNumber}
-              onChange={(e) => handleChange("accountNumber", e.target.value)}
-            />
-            {errors.accountNumber && <span className="cp-error">{errors.accountNumber}</span>}
-          </label>
-          {form.method === "bank" && (
-            <label className="cp-full-width">IBAN (optional)
-              <input
-                placeholder="PK00XXXX0000000000000000"
-                value={form.iban}
-                onChange={(e) => handleChange("iban", e.target.value)}
-              />
-              {errors.iban && <span className="cp-error">{errors.iban}</span>}
-            </label>
-          )}
-        </div>
-
         <h2 className="cp-section-title">Emergency Contact</h2>
         <p className="cp-note">
-          Parent, sibling ya koi family member jise office zaroorat par contact kar sake.
+          Family member whom the office can contact in case of emergency.
         </p>
         <div className="cp-fields">
-          <label>Contact Name
-            <input value={form.emergencyName} onChange={(e) => handleChange("emergencyName", e.target.value)} />
-            {errors.emergencyName && <span className="cp-error">{errors.emergencyName}</span>}
+          <label>
+            Contact Name
+            <input
+              value={form.emergencyName}
+              onChange={(e) => handleChange("emergencyName", e.target.value)}
+            />
+            {errors.emergencyName && (
+              <span className="cp-error">{errors.emergencyName}</span>
+            )}
           </label>
-          <label>Relation
-            <select value={form.emergencyRelation} onChange={(e) => handleChange("emergencyRelation", e.target.value)}>
+          <label>
+            Relation
+            <select
+              value={form.emergencyRelation}
+              onChange={(e) => handleChange("emergencyRelation", e.target.value)}
+            >
               <option value="">Select</option>
               <option value="Father">Father</option>
               <option value="Mother">Mother</option>
@@ -262,21 +239,67 @@ function CompleteProfile() {
               <option value="Spouse">Spouse</option>
               <option value="Other">Other</option>
             </select>
-            {errors.emergencyRelation && <span className="cp-error">{errors.emergencyRelation}</span>}
+            {errors.emergencyRelation && (
+              <span className="cp-error">{errors.emergencyRelation}</span>
+            )}
           </label>
-          <label className="cp-full-width">Contact Mobile Number
+          <label className="cp-full-width">
+            Emergency Mobile Number
             <input
               inputMode="tel"
               placeholder="03XX-XXXXXXX"
               value={form.emergencyPhone}
               onChange={(e) => handleChange("emergencyPhone", e.target.value)}
             />
-            {errors.emergencyPhone && <span className="cp-error">{errors.emergencyPhone}</span>}
+            {errors.emergencyPhone && (
+              <span className="cp-error">{errors.emergencyPhone}</span>
+            )}
+          </label>
+        </div>
+
+        <h2 className="cp-section-title">HR-Managed Official Info (Read-Only)</h2>
+        <p className="cp-note">
+          CNIC, Department, Bank Details, and Salary are maintained by HR/Admin ({role.toUpperCase()} role).
+        </p>
+        <div className="cp-fields">
+          <label>
+            Department & Designation
+            <input
+              disabled
+              value={`${hrInfo.department} — ${hrInfo.designation}`}
+              style={{ opacity: 0.65 }}
+            />
+          </label>
+          <label>
+            CNIC (Managed by HR)
+            <input
+              disabled
+              value={hrInfo.cnic || "Pending HR entry"}
+              style={{ opacity: 0.65 }}
+            />
+          </label>
+          <label>
+            Bank / Payment Provider
+            <input
+              disabled
+              value={`${hrInfo.providerName} (${hrInfo.accountNumber})`}
+              style={{ opacity: 0.65 }}
+            />
+          </label>
+          <label>
+            Basic / Gross Salary
+            <input
+              disabled
+              value={`Basic: Rs. ${Number(hrInfo.basicSalary).toLocaleString()} | Gross: Rs. ${Math.round(
+                Number(hrInfo.basicSalary) * 1.5
+              ).toLocaleString()}`}
+              style={{ opacity: 0.65 }}
+            />
           </label>
         </div>
 
         <button className="cp-save-btn" onClick={handleSave} disabled={saving}>
-          {saving ? "Saving..." : "Save & Continue"}
+          {saving ? "Saving..." : "Save Contact & Emergency Info"}
         </button>
       </div>
     </div>

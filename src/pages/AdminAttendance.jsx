@@ -22,8 +22,8 @@ function displayNameFor(emp) {
 }
 
 function kindClass(kind) {
-  if (kind === "extreme-late") return "admin-att-s-extreme";
-  if (kind === "late") return "admin-att-s-late";
+  if (kind === "extreme-late" || kind === "missing_checkout") return "admin-att-s-extreme";
+  if (kind === "late" || kind === "half_day") return "admin-att-s-late";
   if (kind === "absent") return "admin-att-s-absent";
   if (kind === "leave") return "admin-att-s-leave";
   if (kind === "pending") return "admin-att-s-pending";
@@ -38,6 +38,7 @@ function AdminAttendance() {
   const [month, setMonth] = useState(currentMonth);
   const [records, setRecords] = useState([]);
   const [leaves, setLeaves] = useState([]);
+  const [holidays, setHolidays] = useState([]);
   const [loadingUsers, setLoadingUsers] = useState(true);
   const [loadingData, setLoadingData] = useState(false);
   const [error, setError] = useState("");
@@ -45,13 +46,16 @@ function AdminAttendance() {
 
   useEffect(() => {
     let cancelled = false;
-
     const loadUsers = async () => {
       try {
-        const snap = await getDocs(collection(db, "users"));
+        const [snap, holSnap] = await Promise.all([
+          getDocs(collection(db, "users")),
+          getDocs(collection(db, "public_holidays")),
+        ]);
         if (cancelled) return;
         const list = snap.docs.map((d) => ({ uid: d.id, ...d.data() }));
         setEmployees(list);
+        setHolidays(holSnap.docs.map((d) => d.data()));
         if (list.length > 0) setSelectedUid((prev) => prev || list[0].uid);
       } catch (err) {
         if (err?.name !== "AbortError" && !cancelled) setError(err.message);
@@ -59,9 +63,10 @@ function AdminAttendance() {
         if (!cancelled) setLoadingUsers(false);
       }
     };
-
     loadUsers();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   useEffect(() => {
@@ -73,16 +78,20 @@ function AdminAttendance() {
       setError("");
       try {
         const [attSnap, leaveSnap] = await Promise.all([
-          getDocs(query(
-            collection(db, "attendance"),
-            where("uid", "==", selectedUid),
-            where("month", "==", month)
-          )),
-          getDocs(query(
-            collection(db, "leaveRequests"),
-            where("uid", "==", selectedUid),
-            where("status", "==", "approved")
-          )),
+          getDocs(
+            query(
+              collection(db, "attendance"),
+              where("uid", "==", selectedUid),
+              where("month", "==", month)
+            )
+          ),
+          getDocs(
+            query(
+              collection(db, "leaveRequests"),
+              where("uid", "==", selectedUid),
+              where("status", "==", "approved")
+            )
+          ),
         ]);
         if (cancelled) return;
         setRecords(attSnap.docs.map((d) => d.data()));
@@ -95,25 +104,34 @@ function AdminAttendance() {
     };
 
     loadData();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [selectedUid, month]);
 
   const selectedEmp = employees.find((e) => e.uid === selectedUid);
   const selectedName = selectedEmp ? displayNameFor(selectedEmp) : "";
 
-  const { rows, summary } = selectedEmp && !loadingData
-    ? buildMonthRows({ month, schedule: selectedEmp.schedule, records, leaves })
-    : { rows: [], summary: null };
+  const { rows, summary } =
+    selectedEmp && !loadingData
+      ? buildMonthRows({
+          month,
+          schedule: selectedEmp.schedule,
+          records,
+          leaves,
+          publicHolidays: holidays,
+        })
+      : { rows: [], summary: null };
 
   const stats = summary
     ? [
         ["Present", summary.present],
         ["On time", summary.onTime],
-        ["Late", summary.late],
-        ["Extreme late", summary.extremeLate],
+        ["Late (>09:15)", summary.late],
+        ["Half-Day (<5h)", summary.halfDay],
+        ["Missing Out", summary.missingCheckout],
         ["Absent", summary.absent],
         ["Leave", summary.leave],
-        ["Early leave", summary.early],
       ]
     : [];
 
@@ -125,19 +143,19 @@ function AdminAttendance() {
         <div className="admin-att-identity">
           <div className="admin-att-avatar">E</div>
           <div className="admin-att-identity-text">
-            <span className="admin-att-name">Employee Attendance</span>
+            <span className="admin-att-name">Employee Monthly Attendance</span>
             <span className="admin-att-month-pill">{month}</span>
           </div>
         </div>
         <div className="admin-att-header-actions">
-          <button className="admin-att-daily-btn" onClick={() => navigate("/daily-attendance")}>
-            Daily Check-in
+          <button
+            className="admin-att-daily-btn"
+            onClick={() => navigate("/daily-attendance")}
+          >
+            Daily Sheet & Corrections
           </button>
           <button className="admin-att-back-btn" onClick={() => navigate("/")}>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-              <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            Back
+            ← Back
           </button>
         </div>
       </header>
@@ -145,9 +163,9 @@ function AdminAttendance() {
       <section className="admin-att-hero">
         <div className="admin-att-hero-glow" />
         <p className="admin-att-hero-date">Per-employee monthly record</p>
-        <h1 className="admin-att-hero-title">Review employee attendance</h1>
+        <h1 className="admin-att-hero-title">Review Employee Attendance</h1>
         <p className="admin-att-hero-sub">
-          Employee select karo, mahine ka poora record (on time, late, leave, early leave) neeche aa jayega.
+          Select an employee to view their Check-In, Check-Out, Half-Day, Late, and Leave breakdown.
         </p>
       </section>
 
@@ -156,11 +174,15 @@ function AdminAttendance() {
           <p className="admin-att-empty">Loading...</p>
         ) : (
           <div className="admin-att-emp-list">
-            {employees.length === 0 && <p className="admin-att-empty">No employees found yet.</p>}
+            {employees.length === 0 && (
+              <p className="admin-att-empty">No employees found yet.</p>
+            )}
             {employees.map((emp) => (
               <button
                 key={emp.uid}
-                className={`admin-att-chip ${selectedUid === emp.uid ? "active" : ""}`}
+                className={`admin-att-chip ${
+                  selectedUid === emp.uid ? "active" : ""
+                }`}
                 onClick={() => setSelectedUid(emp.uid)}
               >
                 <span className="admin-att-chip-avatar">
@@ -186,10 +208,26 @@ function AdminAttendance() {
               />
               {rows.length > 0 && (
                 <div className="admin-att-export-bar">
-                  <button onClick={() => exportMonthToCSV(rows, fileName)}>CSV</button>
-                  <button onClick={() => exportMonthToExcel(rows, fileName)}>Excel</button>
-                  <button onClick={() => exportMonthToPDF(rows, fileName, `${selectedName} - ${month}`)}>PDF</button>
-                  <button onClick={() => printElement("admin-attendance-table")}>Print</button>
+                  <button onClick={() => exportMonthToCSV(rows, fileName)}>
+                    CSV
+                  </button>
+                  <button onClick={() => exportMonthToExcel(rows, fileName)}>
+                    Excel
+                  </button>
+                  <button
+                    onClick={() =>
+                      exportMonthToPDF(
+                        rows,
+                        fileName,
+                        `${selectedName} - ${month}`
+                      )
+                    }
+                  >
+                    PDF
+                  </button>
+                  <button onClick={() => printElement("admin-attendance-table")}>
+                    Print
+                  </button>
                 </div>
               )}
             </div>
@@ -209,7 +247,7 @@ function AdminAttendance() {
               {loadingData ? (
                 <p className="admin-att-loading">Loading...</p>
               ) : rows.length === 0 ? (
-                <p className="admin-att-loading">Is mahine ka koi record nahi.</p>
+                <p className="admin-att-loading">No records for this month.</p>
               ) : (
                 <div id="admin-attendance-table" className="admin-att-scroll">
                   <table className="admin-att-table">
@@ -217,7 +255,8 @@ function AdminAttendance() {
                       <tr>
                         <th>Date</th>
                         <th>Day</th>
-                        <th>Check-in</th>
+                        <th>Check-In</th>
+                        <th>Check-Out</th>
                         <th>Status</th>
                         <th>Notes</th>
                       </tr>
@@ -228,6 +267,7 @@ function AdminAttendance() {
                           <td>{r.date}</td>
                           <td>{r.day}</td>
                           <td>{r.time || "—"}</td>
+                          <td>{r.checkOut || "—"}</td>
                           <td className={kindClass(r.kind)}>{r.label}</td>
                           <td>{r.note || "—"}</td>
                         </tr>
