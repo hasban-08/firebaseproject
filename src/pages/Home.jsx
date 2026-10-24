@@ -16,17 +16,9 @@ import { db, auth } from "../firebase";
 import { signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import {
-  ResponsiveContainer,
-  AreaChart,
-  Area,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  CartesianGrid,
-  Legend,
-} from "recharts";
+  AttendanceTrendChart,
+  DepartmentAbsenteeismChart,
+} from "../components/AnalyticsCharts";
 import {
   getLocalDateStr,
   formatTime12,
@@ -737,57 +729,15 @@ function Home() {
             >
               <div className="home-widget">
                 <h3>Attendance Trend ({startDate} to {endDate})</h3>
-                <div style={{ width: "100%", height: 250, marginTop: "12px" }}>
-                  <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={analytics?.attendanceTrend || []}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.07)" />
-                      <XAxis dataKey="date" stroke="#94a3b8" fontSize={11} />
-                      <YAxis stroke="#94a3b8" fontSize={11} allowDecimals={false} />
-                      <Tooltip
-                        contentStyle={{
-                          background: "#0f172a",
-                          border: "1px solid rgba(255,255,255,0.15)",
-                          borderRadius: "10px",
-                        }}
-                      />
-                      <Legend />
-                      <Area
-                        type="monotone"
-                        dataKey="Present"
-                        stroke="#8b5cf6"
-                        fill="rgba(139, 92, 246, 0.3)"
-                      />
-                      <Area
-                        type="monotone"
-                        dataKey="Late"
-                        stroke="#f59e0b"
-                        fill="rgba(245, 158, 11, 0.25)"
-                      />
-                    </AreaChart>
-                  </ResponsiveContainer>
+                <div style={{ width: "100%", marginTop: "12px" }}>
+                  <AttendanceTrendChart data={analytics?.attendanceTrend || []} />
                 </div>
               </div>
 
               <div className="home-widget">
                 <h3>Absenteeism & Late Arrivals by Department</h3>
-                <div style={{ width: "100%", height: 250, marginTop: "12px" }}>
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={analytics?.deptAbsenteeism || []}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.07)" />
-                      <XAxis dataKey="department" stroke="#94a3b8" fontSize={11} />
-                      <YAxis stroke="#94a3b8" fontSize={11} allowDecimals={false} />
-                      <Tooltip
-                        contentStyle={{
-                          background: "#0f172a",
-                          border: "1px solid rgba(255,255,255,0.15)",
-                          borderRadius: "10px",
-                        }}
-                      />
-                      <Legend />
-                      <Bar dataKey="absentDays" name="Absent Days" fill="#ef4444" radius={[6, 6, 0, 0]} />
-                      <Bar dataKey="lateRecords" name="Late Arrivals" fill="#f59e0b" radius={[6, 6, 0, 0]} />
-                    </BarChart>
-                  </ResponsiveContainer>
+                <div style={{ width: "100%", marginTop: "12px" }}>
+                  <DepartmentAbsenteeismChart data={analytics?.deptAbsenteeism || []} />
                 </div>
               </div>
             </div>
