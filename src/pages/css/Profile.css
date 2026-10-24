@@ -1,0 +1,351 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap');
+
+/* ── Page shell ── */
+.dashboard-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #0a0a0f;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(99, 60, 255, 0.25) 0%, transparent 70%),
+    repeating-linear-gradient(
+      0deg,
+      transparent, transparent 39px,
+      rgba(255,255,255,0.03) 39px,
+      rgba(255,255,255,0.03) 40px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent, transparent 39px,
+      rgba(255,255,255,0.03) 39px,
+      rgba(255,255,255,0.03) 40px
+    );
+  font-family: 'DM Sans', sans-serif;
+  padding: 2rem;
+  gap: 1rem;
+}
+
+/* ── Page title ── */
+.dashboard-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 2.8rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin: 0;
+  background: linear-gradient(135deg, #fff 40%, #a78bfa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: fadeUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ══════════════════════════════════
+   Email verification banner
+   ══════════════════════════════════ */
+.verify-banner {
+  width: 100%;
+  max-width: 440px;
+  background: rgba(255, 193, 7, 0.07) !important;
+  border: 1px solid rgba(255, 193, 7, 0.25) !important;
+  border-radius: 14px !important;
+  padding: 1.1rem 1.4rem !important;
+  color: #ffd97a !important;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  animation: fadeUp 0.6s 0.05s cubic-bezier(0.22, 1, 0.36, 1) both;
+  /* override Bootstrap's default alert styles */
+  --bs-alert-bg: transparent;
+  --bs-alert-border-color: transparent;
+  --bs-alert-color: #ffd97a;
+}
+
+.verify-banner strong {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #ffe49a;
+}
+
+/* Resend button */
+.btn-resend.btn {
+  background: rgba(255, 193, 7, 0.15) !important;
+  border: 1px solid rgba(255, 193, 7, 0.35) !important;
+  color: #ffd97a !important;
+  font-family: 'DM Sans', sans-serif !important;
+  font-size: 0.82rem !important;
+  font-weight: 500 !important;
+  border-radius: 7px !important;
+  padding: 0.38rem 0.9rem !important;
+  transition: background 0.2s, transform 0.15s !important;
+  box-shadow: none !important;
+}
+
+.btn-resend.btn:hover {
+  background: rgba(255, 193, 7, 0.28) !important;
+  border-color: rgba(255, 193, 7, 0.55) !important;
+  transform: translateY(-1px) !important;
+}
+
+.btn-resend.btn:active {
+  transform: translateY(0) !important;
+}
+
+/* ── Profile card ── */
+.profile-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 24px;
+  padding: 3rem 2.8rem;
+  width: 100%;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  box-shadow:
+    0 0 0 1px rgba(99, 60, 255, 0.15),
+    0 40px 80px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255,255,255,0.07);
+  animation: fadeUp 0.6s 0.1s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ── Avatar (photo) ── */
+.profile-avatar {
+  width: 90px !important;
+  height: 90px !important;
+  border-radius: 50% !important;
+  border: 3px solid rgba(167, 139, 250, 0.5);
+  box-shadow: 0 0 0 6px rgba(167, 139, 250, 0.1);
+  object-fit: cover;
+  margin-bottom: 0.8rem;
+}
+
+/* ── Avatar placeholder ── */
+.profile-avatar-placeholder {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6d3aff, #a78bfa);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Syne', sans-serif;
+  font-size: 2rem;
+  font-weight: 800;
+  color: #fff;
+  border: 3px solid rgba(167, 139, 250, 0.5);
+  box-shadow: 0 0 0 6px rgba(167, 139, 250, 0.1);
+  margin-bottom: 0.8rem;
+  letter-spacing: -0.02em;
+}
+
+/* ── Welcome text ── */
+.profile-welcome {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin: 0;
+}
+
+/* ── Display name ── */
+.profile-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.7rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0.1rem 0 0;
+  background: linear-gradient(135deg, #fff 40%, #a78bfa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Email ── */
+.profile-email {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.35);
+  margin: 0 0 1.2rem;
+}
+
+/* ── Action buttons row ── */
+.dashboard-actions {
+  display: flex;
+  gap: 0.75rem;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.dashboard-actions .btn-update,
+.dashboard-actions .btn.btn-primary.btn-update {
+  flex: 1;
+  padding: 0.8rem 1rem;
+  background: linear-gradient(135deg, #6d3aff 0%, #a78bfa 100%) !important;
+  border: none !important;
+  border-radius: 10px !important;
+  font-family: 'Syne', sans-serif !important;
+  font-size: 0.9rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.03em !important;
+  text-transform: uppercase;
+  color: #fff !important;
+  box-shadow: 0 4px 20px rgba(109, 58, 255, 0.4) !important;
+  transition: transform 0.15s, box-shadow 0.15s !important;
+}
+
+.dashboard-actions .btn-update:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 28px rgba(109, 58, 255, 0.6) !important;
+}
+
+.dashboard-actions .btn-update:active {
+  transform: translateY(0) !important;
+}
+
+.dashboard-actions .btn-logout,
+.dashboard-actions .btn.btn-danger.btn-logout {
+  flex: 1;
+  padding: 0.8rem 1rem;
+  background: rgba(255, 60, 80, 0.12) !important;
+  border: 1px solid rgba(255, 80, 80, 0.25) !important;
+  border-radius: 10px !important;
+  font-family: 'Syne', sans-serif !important;
+  font-size: 0.9rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.03em !important;
+  text-transform: uppercase;
+  color: #ff6b7a !important;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s !important;
+  box-shadow: none !important;
+}
+
+.dashboard-actions .btn-logout:hover {
+  background: rgba(255, 60, 80, 0.22) !important;
+  border-color: rgba(255, 80, 80, 0.5) !important;
+  transform: translateY(-2px) !important;
+}
+
+.dashboard-actions .btn-logout:active {
+  transform: translateY(0) !important;
+}
+
+/* ═══════════════════════════════════════
+   BOOTSTRAP MODAL — dark theme override
+   ═══════════════════════════════════════ */
+.dashboard-modal .modal-content {
+  background: #13121e;
+  border: 1px solid rgba(167, 139, 250, 0.2);
+  border-radius: 18px;
+  box-shadow:
+    0 0 0 1px rgba(99, 60, 255, 0.12),
+    0 32px 64px rgba(0, 0, 0, 0.7);
+  font-family: 'DM Sans', sans-serif;
+  color: #f0eeff;
+}
+
+.dash-modal-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+  padding: 1.4rem 1.6rem 1.2rem;
+  background: transparent;
+}
+
+.dash-modal-header .btn-close {
+  filter: invert(1) brightness(0.6);
+  transition: filter 0.2s;
+}
+.dash-modal-header .btn-close:hover {
+  filter: invert(1) brightness(1);
+}
+
+.dash-modal-title {
+  font-family: 'Syne', sans-serif !important;
+  font-weight: 700 !important;
+  font-size: 1.2rem !important;
+  letter-spacing: -0.01em;
+  background: linear-gradient(135deg, #fff 40%, #a78bfa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.dash-modal-body {
+  padding: 1.4rem 1.6rem;
+  background: transparent;
+}
+
+.dash-modal-input.form-control {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 10px !important;
+  color: #f0eeff !important;
+  font-family: 'DM Sans', sans-serif !important;
+  font-size: 0.95rem !important;
+  padding: 0.8rem 1rem !important;
+  caret-color: #a78bfa;
+  transition: border-color 0.2s, box-shadow 0.2s !important;
+}
+
+.dash-modal-input.form-control::placeholder {
+  color: rgba(255, 255, 255, 0.3) !important;
+}
+
+.dash-modal-input.form-control:focus {
+  background: rgba(167, 139, 250, 0.08) !important;
+  border-color: rgba(167, 139, 250, 0.6) !important;
+  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.12) !important;
+  outline: none !important;
+}
+
+.dash-modal-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
+  padding: 1.1rem 1.6rem 1.4rem;
+  background: transparent;
+  gap: 0.6rem;
+}
+
+.dash-modal-footer .btn-secondary {
+  background: rgba(255, 255, 255, 0.07) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #c4b8f0 !important;
+  font-family: 'DM Sans', sans-serif !important;
+  font-weight: 500 !important;
+  border-radius: 9px !important;
+  padding: 0.55rem 1.1rem !important;
+  transition: background 0.2s !important;
+}
+
+.dash-modal-footer .btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.13) !important;
+}
+
+.dash-modal-footer .btn-primary {
+  background: linear-gradient(135deg, #6d3aff 0%, #a78bfa 100%) !important;
+  border: none !important;
+  font-family: 'Syne', sans-serif !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.03em !important;
+  border-radius: 9px !important;
+  padding: 0.55rem 1.2rem !important;
+  box-shadow: 0 4px 18px rgba(109, 58, 255, 0.4) !important;
+  transition: transform 0.15s, box-shadow 0.15s !important;
+}
+
+.dash-modal-footer .btn-primary:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 24px rgba(109, 58, 255, 0.6) !important;
+}
+

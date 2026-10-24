@@ -1,0 +1,276 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap');
+
+/* ── Page shell ── */
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #0a0a0f;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(99, 60, 255, 0.25) 0%, transparent 70%),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 39px,
+      rgba(255,255,255,0.03) 39px,
+      rgba(255,255,255,0.03) 40px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 39px,
+      rgba(255,255,255,0.03) 39px,
+      rgba(255,255,255,0.03) 40px
+    );
+  font-family: 'DM Sans', sans-serif;
+  padding: 2rem;
+}
+
+/* ── Card ── */
+.login-form {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 20px;
+  padding: 3rem 2.8rem;
+  width: 100%;
+  max-width: 420px;
+  box-shadow:
+    0 0 0 1px rgba(99, 60, 255, 0.15),
+    0 40px 80px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255,255,255,0.07);
+  animation: fadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Title ── */
+.login-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 2.6rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  text-align: center;
+  margin: 0 0 2.2rem;
+  animation: fadeUp 0.5s 0.05s cubic-bezier(0.22, 1, 0.36, 1) both;
+  background: linear-gradient(135deg, #fff 40%, #a78bfa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Inputs ── */
+.login-input {
+  width: 100%;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 0.85rem 1.1rem;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: #f0eeff;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+  caret-color: #a78bfa;
+}
+
+.login-input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+  font-weight: 300;
+}
+
+.login-input:focus {
+  border-color: rgba(167, 139, 250, 0.6);
+  background: rgba(167, 139, 250, 0.08);
+  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.12);
+}
+
+/* ── Login button ── */
+.login-btn {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  background: linear-gradient(135deg, #6d3aff 0%, #a78bfa 100%);
+  color: #fff;
+  font-family: 'Syne', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.15s, box-shadow 0.15s;
+  box-shadow: 0 4px 24px rgba(109, 58, 255, 0.45);
+}
+
+.login-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.login-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(109, 58, 255, 0.6);
+}
+
+.login-btn:hover::after { opacity: 1; }
+
+.login-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 12px rgba(109, 58, 255, 0.4);
+}
+
+/* ── Forgot password link ── */
+.login-forgot {
+  margin-top: 1.4rem;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 400;
+  /* overrides the inline style color visually via the class — 
+     inline style still wins for 'color', so we nudge with opacity */
+  opacity: 0.75;
+  transition: opacity 0.2s;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  color: #a78bfa !important; /* overrides inline style={{ color: "blue" }} */
+}
+
+.login-forgot:hover {
+  opacity: 1;
+}
+
+/* ═══════════════════════════════════════
+   BOOTSTRAP MODAL — dark theme override
+   ═══════════════════════════════════════ */
+
+/* Backdrop */
+.login-modal .modal-backdrop,
+.modal-backdrop {
+  background-color: rgba(5, 5, 12, 0.75) !important;
+}
+
+/* Dialog box */
+.login-modal .modal-content {
+  background: #13121e;
+  border: 1px solid rgba(167, 139, 250, 0.2);
+  border-radius: 18px;
+  box-shadow:
+    0 0 0 1px rgba(99, 60, 255, 0.12),
+    0 32px 64px rgba(0, 0, 0, 0.7);
+  font-family: 'DM Sans', sans-serif;
+  color: #f0eeff;
+}
+
+/* Header */
+.modal-header-custom {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+  padding: 1.4rem 1.6rem 1.2rem;
+  background: transparent;
+}
+
+/* Close button (×) */
+.modal-header-custom .btn-close {
+  filter: invert(1) brightness(0.6);
+  transition: filter 0.2s;
+}
+.modal-header-custom .btn-close:hover {
+  filter: invert(1) brightness(1);
+}
+
+/* Title */
+.modal-title-custom {
+  font-family: 'Syne', sans-serif !important;
+  font-weight: 700 !important;
+  font-size: 1.2rem !important;
+  letter-spacing: -0.01em;
+  background: linear-gradient(135deg, #fff 40%, #a78bfa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Body */
+.modal-body-custom {
+  padding: 1.4rem 1.6rem;
+  background: transparent;
+}
+
+/* Email input inside modal (Bootstrap form-control override) */
+.modal-input.form-control {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 10px !important;
+  color: #f0eeff !important;
+  font-family: 'DM Sans', sans-serif !important;
+  font-size: 0.95rem !important;
+  padding: 0.8rem 1rem !important;
+  caret-color: #a78bfa;
+  transition: border-color 0.2s, box-shadow 0.2s !important;
+}
+
+.modal-input.form-control::placeholder {
+  color: rgba(255, 255, 255, 0.3) !important;
+}
+
+.modal-input.form-control:focus {
+  background: rgba(167, 139, 250, 0.08) !important;
+  border-color: rgba(167, 139, 250, 0.6) !important;
+  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.12) !important;
+  outline: none !important;
+}
+
+/* Footer */
+.modal-footer-custom {
+  border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
+  padding: 1.1rem 1.6rem 1.4rem;
+  background: transparent;
+  gap: 0.6rem;
+}
+
+/* Close button in footer */
+.modal-footer-custom .btn-secondary {
+  background: rgba(255, 255, 255, 0.07) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #c4b8f0 !important;
+  font-family: 'DM Sans', sans-serif !important;
+  font-weight: 500 !important;
+  border-radius: 9px !important;
+  padding: 0.55rem 1.1rem !important;
+  transition: background 0.2s !important;
+}
+
+.modal-footer-custom .btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.13) !important;
+}
+
+/* Send Reset Link button in footer */
+.modal-footer-custom .btn-primary {
+  background: linear-gradient(135deg, #6d3aff 0%, #a78bfa 100%) !important;
+  border: none !important;
+  font-family: 'Syne', sans-serif !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.03em !important;
+  border-radius: 9px !important;
+  padding: 0.55rem 1.2rem !important;
+  box-shadow: 0 4px 18px rgba(109, 58, 255, 0.4) !important;
+  transition: transform 0.15s, box-shadow 0.15s !important;
+}
+
+.modal-footer-custom .btn-primary:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 24px rgba(109, 58, 255, 0.6) !important;
+}

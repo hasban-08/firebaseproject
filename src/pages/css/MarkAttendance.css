@@ -1,0 +1,227 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+* { box-sizing: border-box; }
+
+.mark-att-page {
+  min-height: 100vh;
+  background-color: #0a0a0f;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(99, 60, 255, 0.22) 0%, transparent 70%),
+    repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.03) 39px, rgba(255,255,255,0.03) 40px),
+    repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,0.03) 39px, rgba(255,255,255,0.03) 40px);
+  padding: 40px 20px 70px;
+  color: #f0eeff;
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* Top bar */
+.mark-att-topbar {
+  max-width: 540px;
+  margin: 0 auto 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mark-att-identity {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.mark-att-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 13px;
+  background: linear-gradient(135deg, #6d3aff 0%, #a78bfa 100%);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 16px;
+  box-shadow: 0 6px 20px rgba(109, 58, 255, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.mark-att-identity-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mark-att-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 16.5px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.mark-att-date-pill {
+  align-self: flex-start;
+  font-size: 10.5px;
+  padding: 3px 10px;
+  border-radius: 100px;
+  background: rgba(167, 139, 250, 0.12);
+  color: #c4b8f0;
+  font-weight: 600;
+  border: 1px solid rgba(167, 139, 250, 0.25);
+}
+
+.mark-att-back-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: #b8b3d0;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 9px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.2s ease;
+}
+
+.mark-att-back-btn:hover {
+  border-color: rgba(167, 139, 250, 0.4);
+  color: #fff;
+  background: rgba(167, 139, 250, 0.1);
+}
+
+.mark-att-loading {
+  text-align: center;
+  color: rgba(240, 238, 255, 0.5);
+  font-size: 13px;
+}
+
+/* Hero */
+.mark-att-hero {
+  position: relative;
+  max-width: 540px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 20px;
+  padding: 44px 38px;
+  overflow: hidden;
+  text-align: center;
+  box-shadow: 0 0 0 1px rgba(99, 60, 255, 0.15), 0 30px 70px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255,255,255,0.07);
+}
+
+.mark-att-hero-glow {
+  position: absolute;
+  top: -80px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 280px;
+  height: 280px;
+  background: radial-gradient(circle, rgba(109, 58, 255, 0.35), transparent 70%);
+  pointer-events: none;
+}
+
+.mark-att-hero-date {
+  position: relative;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.4);
+  margin: 0 0 14px;
+}
+
+.mark-att-hero-title {
+  position: relative;
+  font-family: 'Syne', sans-serif;
+  font-size: 27px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0 0 10px;
+  background: linear-gradient(135deg, #fff 40%, #a78bfa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.mark-att-hero-sub {
+  position: relative;
+  font-size: 14.5px;
+  font-weight: 300;
+  color: rgba(240, 238, 255, 0.55);
+  margin: 0 auto 28px;
+  max-width: 36ch;
+}
+
+.mark-att-cta {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  background: linear-gradient(135deg, #6d3aff 0%, #a78bfa 100%);
+  color: #fff;
+  border: none;
+  padding: 14px 28px;
+  border-radius: 12px;
+  font-family: 'Syne', sans-serif;
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 4px 24px rgba(109, 58, 255, 0.45);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.mark-att-cta:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(109, 58, 255, 0.6);
+}
+
+.mark-att-cta:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.mark-att-status {
+  position: relative;
+  display: inline-block;
+  font-size: 15px;
+  font-weight: 700;
+  color: #2dd4bf;
+  background: rgba(45, 212, 191, 0.1);
+  border: 1px solid rgba(45, 212, 191, 0.25);
+  padding: 10px 22px;
+  border-radius: 100px;
+}
+
+.mark-att-status.is-late {
+  color: #fbbf24;
+  background: rgba(251, 191, 36, 0.1);
+  border-color: rgba(251, 191, 36, 0.25);
+}
+
+.mark-att-status.is-extreme-late {
+  color: #f87171;
+  background: rgba(248, 113, 113, 0.1);
+  border-color: rgba(248, 113, 113, 0.25);
+}
+
+.mark-att-link {
+  position: relative;
+  margin: 24px 0 0;
+  font-size: 13px;
+  color: #a78bfa;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.mark-att-link:hover {
+  color: #c4b8f0;
+}
+
+@media (max-width: 480px) {
+  .mark-att-hero { padding: 32px 24px; border-radius: 18px; }
+  .mark-att-hero-title { font-size: 21px; }
+  .mark-att-avatar { width: 38px; height: 38px; font-size: 14px; border-radius: 11px; }
+}

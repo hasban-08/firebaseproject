@@ -1,0 +1,202 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap');
+
+/* ── Wrapper ── */
+.cp-wrapper {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  font-family: 'DM Sans', sans-serif;
+  animation: cpFadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes cpFadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Page title ── */
+.cp-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.9rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin: 0 0 1.5rem;
+  background: linear-gradient(135deg, #fff 40%, #a78bfa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Card ── */
+.cp-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 2.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+  box-shadow:
+    0 0 0 1px rgba(99, 60, 255, 0.12),
+    0 32px 64px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* ── Field group ── */
+.cp-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+/* ── Label ── */
+.cp-label {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+/* ── Input & Textarea ── */
+.cp-input {
+  width: 100%;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 0.82rem 1rem;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+  color: #f0eeff;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+  caret-color: #a78bfa;
+  resize: none;
+}
+
+.cp-input::placeholder {
+  color: rgba(255, 255, 255, 0.25);
+  font-weight: 300;
+}
+
+.cp-input:focus {
+  border-color: rgba(167, 139, 250, 0.55);
+  background: rgba(167, 139, 250, 0.07);
+  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.1);
+}
+
+.cp-textarea {
+  min-height: 130px;
+  line-height: 1.6;
+}
+
+/* ── Custom file input ── */
+.cp-file-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.82rem 1rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px dashed rgba(167, 139, 250, 0.3);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.cp-file-label:hover {
+  background: rgba(167, 139, 250, 0.07);
+  border-color: rgba(167, 139, 250, 0.55);
+}
+
+.cp-file-icon {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.cp-file-text {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.45);
+  transition: color 0.2s;
+}
+
+.cp-file-label:hover .cp-file-text {
+  color: rgba(167, 139, 250, 0.9);
+}
+
+.cp-file-hidden {
+  display: none;
+}
+
+/* ── Image preview ── */
+.cp-preview {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(167, 139, 250, 0.2);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+
+.cp-preview-img {
+  width: 100%;
+  display: block;
+  border-radius: 12px;
+}
+
+/* ── Submit button ── */
+.cp-btn {
+  width: 100%;
+  padding: 0.92rem 1rem;
+  background: linear-gradient(135deg, #6d3aff 0%, #a78bfa 100%);
+  color: #fff;
+  font-family: 'Syne', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.15s, box-shadow 0.15s, opacity 0.2s;
+  box-shadow: 0 4px 24px rgba(109, 58, 255, 0.45);
+}
+
+.cp-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(109, 58, 255, 0.6);
+}
+
+.cp-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.cp-btn:disabled,
+.cp-btn-loading {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* ── Loading spinner ── */
+.cp-spinner {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  border: 2px solid rgba(255,255,255,0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: cpSpin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes cpSpin {
+  to { transform: rotate(360deg); }
+}

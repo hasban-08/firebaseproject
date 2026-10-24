@@ -1,0 +1,162 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap');
+
+/* ── Navbar ── */
+.header-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  background: rgba(18, 18, 18, 0.83);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: 0 2px 32px rgba(0, 0, 0, 0.5);
+  font-family: 'DM Sans', sans-serif;
+}
+
+.header-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  height: 62px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ── Brand ── */
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-family: 'Syne', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #fff 30%, #a78bfa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  transition: opacity 0.2s;
+  text-decoration: none;
+  user-select: none;
+}
+
+.header-brand-icon {
+  color: #a78bfa;
+  /* icon color won't follow gradient, set directly */
+  stroke: #a78bfa;
+  flex-shrink: 0;
+}
+
+.header-brand:hover {
+  opacity: 0.8;
+}
+
+/* ── Nav ── */
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+/* ── Nav item: icon + slide-in label ── */
+.header-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 0.45rem 0.75rem;
+  border-radius: 10px;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.5);
+  transition: color 0.2s, background 0.22s;
+  overflow: hidden;
+  position: relative;
+}
+
+.header-nav-item:hover {
+  color: #f0eeff;
+  background: rgba(167, 139, 250, 0.12);
+}
+
+/* Icon — always visible */
+.header-nav-icon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.header-nav-item:hover .header-nav-icon {
+  transform: translateX(-2px);
+}
+
+/* Label — hidden by default, slides in on hover */
+.header-nav-label {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 500;
+  white-space: nowrap;
+  max-width: 0;
+  opacity: 0;
+  overflow: hidden;
+  margin-left: 0;
+  transition:
+    max-width 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.22s ease,
+    margin-left 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.header-nav-item:hover .header-nav-label {
+  max-width: 120px;
+  opacity: 1;
+  margin-left: 0.45rem;
+}
+
+/* ── Logout button ── */
+.header-logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.48rem 1rem;
+  background: rgba(255, 60, 80, 0.1);
+  border: 1px solid rgba(255, 80, 80, 0.28);
+  border-radius: 9px;
+  color: #ff6b7a;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+}
+
+.header-logout-btn:hover {
+  background: rgba(255, 60, 80, 0.22);
+  border-color: rgba(255, 80, 80, 0.55);
+  transform: translateY(-1px);
+}
+
+.header-logout-btn:active {
+  transform: translateY(0);
+}
+
+/* ── Mobile ── */
+@media (max-width: 600px) {
+  .header-brand span {
+    display: none;
+  }
+
+  .header-logout-label {
+    display: none;
+  }
+
+  .header-logout-btn {
+    padding: 0.48rem 0.7rem;
+  }
+
+  .header-inner {
+    padding: 0 1rem;
+  }
+}
