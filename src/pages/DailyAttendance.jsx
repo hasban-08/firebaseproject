@@ -75,7 +75,7 @@ function DailyAttendance() {
         getDocs(collection(db, "users")),
         getDocs(query(collection(db, "attendance"), where("date", "==", selectedDate))),
         getDocs(query(collection(db, "leaveRequests"), where("status", "==", "approved"))),
-        getDocs(query(collection(db, "attendance_corrections"), where("status", "==", "pending"))),
+        getDocs(query(collection(db, "attendance_corrections"), where("status", "==", "pending"))).catch(() => ({ docs: [] })),
       ]);
 
       setEmployees(usersSnap.docs.map((d) => ({ uid: d.id, ...d.data() })));

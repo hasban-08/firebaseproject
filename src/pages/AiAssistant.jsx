@@ -3,12 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { askHrAiAssistant } from "../services/hrServer";
 
 const SAMPLE_PROMPTS = [
+  "Aaj kon kon present aur late hai?",
   "Mera leave balance kitna baaqi hai?",
   "What is the company grace period, half-day, and payroll tax policy?",
-  "Show this month's attendance summary",
-  "Is mahine ke top late-comers kon hain?",
+  "Salary 95000 par tax aur net salary kitni hogi?",
   "Show payroll summary for this month",
-  "Total headcount by department batao",
+  "Recent audit trail logs dikhao",
 ];
 
 function AiAssistant() {
@@ -33,13 +33,14 @@ function AiAssistant() {
     setLoading(true);
 
     try {
-      const res = await askHrAiAssistant({ message: text, mode: "chat" });
+      const res = await askHrAiAssistant({ message: text, mode: "chat", history: messages });
       setMessages((prev) => [
         ...prev,
         {
           role: "assistant",
           text: res.reply,
           toolsUsed: res.toolsUsed || [],
+          actions: res.actions || [],
           aiGenerated: true,
         },
       ]);

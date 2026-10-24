@@ -22,6 +22,7 @@ import CompleteProfile from "./pages/CompleteProfile";
 
 import ProtectedRoute from "./components/ProtectedRoutes";
 import ProfileGate from "./components/ProfileGate";
+import FloatingChatWidget from "./components/FloatingChatWidget";
 
 import LeaveRequest from "./pages/LeaveRequest";
 import ManageLeaveRequests from "./pages/ManageLeaveRequests";
@@ -205,6 +206,7 @@ function App() {
           </>
         )}
       </Routes>
+      {user && <FloatingChatWidget />}
     </BrowserRouter>
   );
 }

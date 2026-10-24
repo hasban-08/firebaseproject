@@ -1,10 +1,22 @@
 import { useEffect, useState } from "react";
 import {
-  collection, getDocs, doc, updateDoc, query, where, writeBatch
+  collection,
+  getDocs,
+  doc,
+  updateDoc,
+  query,
+  where,
+  writeBatch,
 } from "firebase/firestore";
-import { db } from "../firebase";
+import { db, auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
-import { WEEKDAY_KEYS, WEEKDAY_LABELS, calculateAttendanceStatus } from "../utils/attendanceHelpers";
+import {
+  WEEKDAY_KEYS,
+  WEEKDAY_LABELS,
+  calculateAttendanceStatus,
+  parseDateValue,
+} from "../utils/attendanceHelpers";
+import { recordAuditLog } from "../services/hrServer";
 import "./css/ManageSchedule.css";
 
 function ManageSchedule() {
@@ -28,8 +40,13 @@ function ManageSchedule() {
     setSelectedName(emp.name);
     setSchedule(
       emp.schedule || {
-        sun: "", mon: "10:00", tue: "10:00", wed: "10:00",
-        thu: "10:00", fri: "10:00", sat: "",
+        sun: "",
+        mon: "09:00",
+        tue: "09:00",
+        wed: "09:00",
+        thu: "09:00",
+        fri: "09:00",
+        sat: "",
       }
     );
   };
@@ -39,7 +56,7 @@ function ManageSchedule() {
   };
 
   const toggleDayOff = (dayKey) => {
-    setSchedule((prev) => ({ ...prev, [dayKey]: prev[dayKey] ? "" : "10:00" }));
+    setSchedule((prev) => ({ ...prev, [dayKey]: prev[dayKey] ? "" : "09:00" }));
   };
 
   const saveSchedule = async () => {
@@ -47,7 +64,10 @@ function ManageSchedule() {
     try {
       await updateDoc(doc(db, "users", selectedUid), { schedule });
 
-      const attQ = query(collection(db, "attendance"), where("uid", "==", selectedUid));
+      const attQ = query(
+        collection(db, "attendance"),
+        where("uid", "==", selectedUid)
+      );
       const attSnap = await getDocs(attQ);
 
       if (!attSnap.empty) {
@@ -55,14 +75,29 @@ function ManageSchedule() {
 
         attSnap.docs.forEach((docSnap) => {
           const record = docSnap.data();
-          const checkInDate = record.checkInTime.toDate();
-          const { status, lateMinutes } = calculateAttendanceStatus(schedule, checkInDate);
+          const checkInDate = parseDateValue(record.checkInTime);
+          if (!checkInDate) return;
+          const { status, lateMinutes } = calculateAttendanceStatus(
+            schedule,
+            checkInDate
+          );
 
           batch.update(docSnap.ref, { status, lateMinutes });
         });
 
         await batch.commit();
       }
+
+      await recordAuditLog({
+        actorUid: auth.currentUser?.uid,
+        actorName: auth.currentUser?.displayName || "Admin/HR",
+        actorRole: "admin",
+        action: "EMPLOYEE_SCHEDULE_UPDATED",
+        entity: "users",
+        entityId: selectedUid,
+        before: null,
+        after: { employee: selectedName, schedule },
+      });
 
       alert("Schedule saved — past attendance statuses updated");
     } catch (error) {
@@ -79,12 +114,18 @@ function ManageSchedule() {
           <div className="sched-avatar">S</div>
           <div className="sched-identity-text">
             <span className="sched-name">Manage Schedule</span>
-            <span className="sched-role-pill">Admin only</span>
+            <span className="sched-role-pill">Admin / HR</span>
           </div>
         </div>
         <button className="sched-back-btn" onClick={() => navigate("/")}>
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-            <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <path
+              d="M15 18l-6-6 6-6"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
           </svg>
           Back
         </button>
@@ -122,15 +163,22 @@ function ManageSchedule() {
           <div className="sched-card">
             <div className="sched-card-header">
               <span className="sched-card-title">{selectedName}'s week</span>
-              <span className="sched-card-hint">Toggle a day off, or set its check-in time</span>
+              <span className="sched-card-hint">
+                Toggle a day off, or set its check-in time
+              </span>
             </div>
 
             <div className="sched-days">
               {WEEKDAY_KEYS.map((dayKey) => {
                 const isOff = !schedule[dayKey];
                 return (
-                  <div className={`sched-day-row ${isOff ? "is-off" : ""}`} key={dayKey}>
-                    <span className="sched-day-label">{WEEKDAY_LABELS[dayKey]}</span>
+                  <div
+                    className={`sched-day-row ${isOff ? "is-off" : ""}`}
+                    key={dayKey}
+                  >
+                    <span className="sched-day-label">
+                      {WEEKDAY_LABELS[dayKey]}
+                    </span>
 
                     {isOff ? (
                       <span className="sched-off-tag">Day off</span>
@@ -155,7 +203,11 @@ function ManageSchedule() {
               })}
             </div>
 
-            <button className="sched-save-btn" onClick={saveSchedule} disabled={saving}>
+            <button
+              className="sched-save-btn"
+              onClick={saveSchedule}
+              disabled={saving}
+            >
               {saving ? "Saving & updating records..." : "Save Schedule"}
             </button>
           </div>
