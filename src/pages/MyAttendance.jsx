@@ -127,7 +127,7 @@ function MyAttendance() {
           > Self Check-In / Correction
           </button>
           <button className="my-attendance-back-btn" onClick={() => navigate("/")}>
-            <- Back
+            Back
           </button>
         </div>
       </header>

@@ -154,7 +154,7 @@ function AdminAttendance() {
           > Daily Sheet & Corrections
           </button>
           <button className="admin-att-back-btn" onClick={() => navigate("/")}>
-            <- Back
+            Back
           </button>
         </div>
       </header>

@@ -379,7 +379,7 @@ function AuditLogs() {
               cursor: "pointer",
             }}
           >
-            <- Back to Dashboard
+            Back to Dashboard
           </button>
         </div>
       </header>

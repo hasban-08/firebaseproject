@@ -275,7 +275,7 @@ function DailyAttendance() {
           > My Self Check-In
           </button>
           <button className="daily-back-btn" onClick={() => navigate("/")}>
-            <- Back
+            Back
           </button>
         </div>
       </header>

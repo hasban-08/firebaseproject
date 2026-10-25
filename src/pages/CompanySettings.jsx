@@ -261,7 +261,7 @@ function CompanySettings() {
           </div>
         </div>
         <button onClick={() => navigate("/")} style={backBtnStyle}>
-          <- Back to Dashboard
+          Back to Dashboard
         </button>
       </header>
 
