@@ -209,7 +209,7 @@ function DailyAttendance() {
         ...base,
         checkedIn: true,
         time: formatTime12(record.checkInTime),
-        checkOut: record.checkOutTime ? formatTime12(record.checkOutTime) : "—",
+        checkOut: record.checkOutTime ? formatTime12(record.checkOutTime) : "-",
         workedHours: record.workedHours ?? 0,
         displayStatus: statusLabel({ ...record, status: effStatus }),
         statusKind: effStatus,
@@ -272,11 +272,10 @@ function DailyAttendance() {
           <button
             className="daily-back-btn"
             onClick={() => navigate("/mark-attendance")}
-          >
-            My Self Check-In
+          > My Self Check-In
           </button>
           <button className="daily-back-btn" onClick={() => navigate("/")}>
-            ← Back
+            <- Back
           </button>
         </div>
       </header>
@@ -285,8 +284,7 @@ function DailyAttendance() {
         <div className="daily-hero-glow" />
         <p className="daily-hero-date">{isToday ? "Today" : selectedDate}</p>
         <h1 className="daily-hero-title">Attendance Sheet & HR Overrides</h1>
-        <p className="daily-hero-sub">
-          Employees check in themselves from their portal. HR/Admin can review statuses, approve correction requests, or override records here.
+        <p className="daily-hero-sub"> Employees check in themselves from their portal. HR/Admin can review statuses, approve correction requests, or override records here.
         </p>
       </section>
 
@@ -302,8 +300,7 @@ function DailyAttendance() {
               marginBottom: "22px",
             }}
           >
-            <h3 style={{ fontSize: "15px", fontWeight: 700, marginBottom: "12px", color: "#ddd6fe" }}>
-              🔔 Pending Attendance Correction Requests ({corrections.length})
+            <h3 style={{ fontSize: "15px", fontWeight: 700, marginBottom: "12px", color: "#ddd6fe" }}> Pending Attendance Correction Requests ({corrections.length})
             </h3>
             <div style={{ display: "grid", gap: "10px" }}>
               {corrections.map((c) => (
@@ -321,19 +318,17 @@ function DailyAttendance() {
                   }}
                 >
                   <div>
-                    <strong>{c.employeeName}</strong> ({c.department || "General"}) — Date:{" "}
-                    <strong>{c.date}</strong> · Requested: {c.requestedCheckIn} to{" "}
+                    <strong>{c.employeeName}</strong> ({c.department || "General"}) - Date:{" "}
+                    <strong>{c.date}</strong> | Requested: {c.requestedCheckIn} to{" "}
                     {c.requestedCheckOut}
-                    <div style={{ fontSize: "12.5px", color: "#cbd5e1", marginTop: "3px" }}>
-                      Reason: "{c.reason}"
+                    <div style={{ fontSize: "12.5px", color: "#cbd5e1", marginTop: "3px" }}> Reason: "{c.reason}"
                     </div>
                   </div>
                   <div style={{ display: "flex", gap: "8px" }}>
                     <button
                       className="daily-checkin-btn small"
                       onClick={() => handleCorrectionReview(c, "approved")}
-                    >
-                      Approve
+                    > Approve
                     </button>
                     <button
                       onClick={() => handleCorrectionReview(c, "rejected")}
@@ -346,8 +341,7 @@ function DailyAttendance() {
                         cursor: "pointer",
                         fontSize: "12px",
                       }}
-                    >
-                      Reject
+                    > Reject
                     </button>
                   </div>
                 </div>
@@ -366,35 +360,28 @@ function DailyAttendance() {
           {rows.length > 0 && (
             <div className="daily-export-bar">
               <button
-                onClick={() =>
-                  exportDailyToCSV(exportRows, `daily-attendance-${selectedDate}`)
+                onClick={() => exportDailyToCSV(exportRows, `daily-attendance-${selectedDate}`)
                 }
-              >
-                CSV
+              > CSV
               </button>
               <button
-                onClick={() =>
-                  exportDailyToExcel(
+                onClick={() => exportDailyToExcel(
                     exportRows,
                     `daily-attendance-${selectedDate}`
                   )
                 }
-              >
-                Excel
+              > Excel
               </button>
               <button
-                onClick={() =>
-                  exportDailyToPDF(
+                onClick={() => exportDailyToPDF(
                     exportRows,
                     `daily-attendance-${selectedDate}`,
                     selectedDate
                   )
                 }
-              >
-                PDF
+              > PDF
               </button>
-              <button onClick={() => printElement("daily-attendance-table")}>
-                Print
+              <button onClick={() => printElement("daily-attendance-table")}> Print
               </button>
             </div>
           )}
@@ -429,38 +416,34 @@ function DailyAttendance() {
                       <td className={statusClass(r.statusKind)}>
                         {r.displayStatus}
                         {r.early && (
-                          <small className="daily-early-note">
-                            Early leave {formatHM12(r.early.earlyLeaveTime)}
+                          <small className="daily-early-note"> Early leave {formatHM12(r.early.earlyLeaveTime)}
                           </small>
                         )}
                       </td>
-                      <td>{r.time || "—"}</td>
-                      <td>{r.checkOut || "—"}</td>
-                      <td>{r.workedHours !== null ? `${r.workedHours}h` : "—"}</td>
+                      <td>{r.time || "-"}</td>
+                      <td>{r.checkOut || "-"}</td>
+                      <td>{r.workedHours !== null ? `${r.workedHours}h` : "-"}</td>
                       <td data-no-print>
                         <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
                           <button
                             className="daily-checkin-btn small"
                             disabled={busyUid === r.uid}
                             onClick={() => overrideAttendance(r.emp, "present")}
-                          >
-                            Mark Present
+                          > Mark Present
                           </button>
                           <button
                             className="daily-checkin-btn small"
                             style={{ background: "rgba(245,158,11,0.25)", color: "#fcd34d" }}
                             disabled={busyUid === r.uid}
                             onClick={() => overrideAttendance(r.emp, "late")}
-                          >
-                            Late
+                          > Late
                           </button>
                           <button
                             className="daily-checkin-btn small"
                             style={{ background: "rgba(59,130,246,0.25)", color: "#93c5fd" }}
                             disabled={busyUid === r.uid}
                             onClick={() => overrideAttendance(r.emp, "half_day")}
-                          >
-                            Half-Day
+                          > Half-Day
                           </button>
                         </div>
                       </td>

@@ -10,12 +10,12 @@ import {
 import { getLocalDateStr } from "../utils/attendanceHelpers";
 
 const QUICK_CHIPS = [
-  { label: "📡 Aaj kon present hai?", prompt: "Aaj kon kon present aur late hai?" },
-  { label: "🌴 Mera Leave Balance", prompt: "Mera leave balance kitna baaqi hai?" },
-  { label: "💰 Salary & Tax", prompt: "Meri salary aur payroll tax summary batao" },
-  { label: "🛡 Audit Trail", prompt: "Recent audit trail logs dikhao" },
-  { label: "📋 HR Policies", prompt: "Company grace period, half-day aur tax policy kya hai?" },
-  { label: "🕒 Live Time & Date", prompt: "Abhi real time aur aaj ki date kya hai?" },
+  { label: "Today's Attendance", prompt: "Who is present and late today?" },
+  { label: "My Leave Balance", prompt: "What is my remaining leave balance?" },
+  { label: "Salary & Tax Summary", prompt: "Show my salary and payroll tax summary" },
+  { label: "Audit Trail Logs", prompt: "Show recent audit trail logs" },
+  { label: "HR & Payroll Policy", prompt: "What is the company grace period, half-day, and payroll tax policy?" },
+  { label: "Server Time & Date", prompt: "What is the current server time and date?" },
 ];
 
 function formatRichText(text) {
@@ -68,7 +68,6 @@ function FloatingChatWidget() {
     () => localStorage.getItem("workpulse_gemini_api_key") || ""
   );
 
-  // Real-time Firestore live stats
   const [liveStats, setLiveStats] = useState({
     presentToday: 0,
     lateToday: 0,
@@ -79,7 +78,7 @@ function FloatingChatWidget() {
   const [messages, setMessages] = useState([
     {
       role: "assistant",
-      text: "Assalam-o-Alaikum! 👋 Main aapka **Real-Time WorkPulse AI Copilot** hoon.\n\nMain **live Firestore data** (`attendance`, `leaves`, `payroll`, `audit_logs`, `employees`) ke sath real-time jawab deta hoon. Aap mujh se project ke mutabiq ya koi bhi sawal **Roman Urdu** ya **English** mein pooch sakte hain!",
+      text: "Welcome! I am your **Real-Time HR & Payroll AI Assistant**.\n\nI am connected to live Firestore data (`attendance`, `leaves`, `payroll`, `audit_logs`, `employees`). Ask me anything about your workforce, attendance, leave balances, salary calculations, or company policies.",
       toolsUsed: ["live_realtime_stream"],
       actions: [
         { label: "Mark Attendance", path: "/mark-attendance" },
@@ -96,7 +95,6 @@ function FloatingChatWidget() {
   const messagesEndRef = useRef(null);
   const prevPresentRef = useRef(null);
 
-  // Real-time clock ticker
   useEffect(() => {
     const timer = setInterval(() => {
       setLiveStats((prev) => ({
@@ -111,7 +109,6 @@ function FloatingChatWidget() {
     return () => clearInterval(timer);
   }, []);
 
-  // Real-Time Firestore Listeners (Attendance & Leave Requests)
   useEffect(() => {
     if (!auth.currentUser) return;
     const todayStr = getLocalDateStr();
@@ -132,7 +129,6 @@ function FloatingChatWidget() {
           lateToday: lateCount,
         }));
 
-        // Push a real-time live event into chat if a new check-in happens while logged in
         if (prevPresentRef.current !== null && presentCount > prevPresentRef.current) {
           const newest = docs[docs.length - 1];
           if (newest) {
@@ -140,7 +136,7 @@ function FloatingChatWidget() {
               ...prev,
               {
                 role: "assistant",
-                text: `🔔 **Real-Time Live Update**: **${newest.name || "An employee"}** ne abhi check-in kiya hai (Status: **${(newest.status || "present").toUpperCase()}**). Aaj total present: **${presentCount}**.`,
+                text: `**Real-Time Live Update**: **${newest.name || "An employee"}** just checked in (Status: **${(newest.status || "present").toUpperCase()}**). Total present today: **${presentCount}**.`,
                 toolsUsed: ["onSnapshot_attendance"],
                 timestamp: new Date().toLocaleTimeString([], {
                   hour: "2-digit",
@@ -156,9 +152,7 @@ function FloatingChatWidget() {
         }
         prevPresentRef.current = presentCount;
       },
-      () => {
-        // Ignore snapshot permission fallback
-      }
+      () => {}
     );
 
     const leaveQuery = query(
@@ -182,7 +176,6 @@ function FloatingChatWidget() {
     };
   }, [isOpen]);
 
-  // Auto-scroll to newest message
   useEffect(() => {
     if (isOpen) {
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -207,15 +200,12 @@ function FloatingChatWidget() {
 
     try {
       const lower = text.toLowerCase();
-      // Check if user wants to parse/apply a leave directly via natural language
       const looksLikeSmartLeave =
-        (lower.includes("chutti chahiye") ||
-          lower.includes("off chahiye") ||
-          lower.includes("leave lagani") ||
-          lower.includes("chutti lagani") ||
-          lower.includes("apply leave for") ||
-          lower.includes("bukhar hai") ||
-          lower.includes("shaadi hai")) &&
+        (lower.includes("need leave") ||
+          lower.includes("apply leave") ||
+          lower.includes("request leave") ||
+          lower.includes("take off") ||
+          lower.includes("sick tomorrow")) &&
         !lower.includes("balance");
 
       if (looksLikeSmartLeave) {
@@ -225,7 +215,7 @@ function FloatingChatWidget() {
           ...prev,
           {
             role: "assistant",
-            text: `✨ **Smart Leave AI Parser**:\nMaine aapki request se yeh leave details tayyar kar li hain:\n• **Leave Type**: **${parsed.leaveType.toUpperCase()}**\n• **Start Date**: **${parsed.startDate}**\n• **End Date**: **${parsed.endDate}**\n• **Reason**: "${parsed.reason}"\n\nNeeche button daba kar 1-Click mein submit karein ya Leave Page par kholein:`,
+            text: `**Smart Leave AI Parser**:\nI have prepared your structured leave request:\n- **Leave Type**: **${parsed.leaveType.toUpperCase()}**\n- **Start Date**: **${parsed.startDate}**\n- **End Date**: **${parsed.endDate}**\n- **Reason**: "${parsed.reason}"\n\nClick the button below to submit immediately or open the Leave Request page:`,
             toolsUsed: ["smart_leave_parser"],
             timestamp: new Date().toLocaleTimeString([], {
               hour: "2-digit",
@@ -261,7 +251,7 @@ function FloatingChatWidget() {
         ...prev,
         {
           role: "assistant",
-          text: `⚠️ **Notice**: ${err.message || "Could not process request."}`,
+          text: `Notice: ${err.message || "Could not process request."}`,
           toolsUsed: [],
           timestamp: new Date().toLocaleTimeString([], {
             hour: "2-digit",
@@ -290,7 +280,7 @@ function FloatingChatWidget() {
         ...prev,
         {
           role: "assistant",
-          text: `✅ **Leave Submitted Successfully!**\nAapki **${smartLeaveDraft.leaveType.toUpperCase()}** leave (**${res.workingDays}** working day(s): ${smartLeaveDraft.startDate} to ${smartLeaveDraft.endDate}) HR approval ke liye bhej di gayi hai aur Audit Trail mein record ho gayi hai.`,
+          text: `**Leave Submitted Successfully!**\nYour **${smartLeaveDraft.leaveType.toUpperCase()}** leave (**${res.workingDays}** working day(s): ${smartLeaveDraft.startDate} to ${smartLeaveDraft.endDate}) has been sent for HR approval and recorded in the Audit Trail.`,
           toolsUsed: ["applyForLeave", "recordAuditLog"],
           actions: [{ label: "View My Leaves", path: "/leave-request" }],
           timestamp: new Date().toLocaleTimeString([], {
@@ -305,7 +295,7 @@ function FloatingChatWidget() {
         ...prev,
         {
           role: "assistant",
-          text: `❌ **Leave Validation Error**: ${err.message}`,
+          text: `**Leave Validation Error**: ${err.message}`,
           toolsUsed: ["applyForLeave"],
           actions: [{ label: "Open Leave Form", path: "/leave-request" }],
           timestamp: new Date().toLocaleTimeString([], {
@@ -329,14 +319,12 @@ function FloatingChatWidget() {
     setShowKeyModal(false);
   };
 
-  // Hide widget on login/setup screens
   if (location.pathname === "/login" || location.pathname === "/setup") {
     return null;
   }
 
   return (
     <>
-      {/* FLOATING DRAWER WINDOW */}
       {isOpen && (
         <div
           style={{
@@ -358,7 +346,6 @@ function FloatingChatWidget() {
             fontFamily: "'DM Sans', sans-serif",
           }}
         >
-          {/* Header */}
           <div
             style={{
               padding: "14px 16px",
@@ -380,12 +367,13 @@ function FloatingChatWidget() {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  fontSize: "18px",
+                  fontSize: "13px",
+                  fontWeight: 800,
+                  color: "#fff",
                   boxShadow: "0 4px 14px rgba(124, 58, 237, 0.45)",
                   position: "relative",
                 }}
-              >
-                🤖
+              > AI
                 <span
                   style={{
                     position: "absolute",
@@ -401,8 +389,7 @@ function FloatingChatWidget() {
               </div>
               <div>
                 <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                  <span style={{ fontWeight: 700, fontSize: "14.5px", color: "#fff" }}>
-                    WorkPulse Live AI
+                  <span style={{ fontWeight: 700, fontSize: "14.5px", color: "#fff" }}> WorkPulse Live AI
                   </span>
                   <span
                     style={{
@@ -413,14 +400,12 @@ function FloatingChatWidget() {
                       color: "#6ee7b7",
                       fontWeight: 700,
                     }}
-                  >
-                    ● REAL-TIME
+                  > REAL-TIME
                   </span>
                 </div>
-                <div style={{ fontSize: "11px", color: "#cbd5e1", marginTop: "2px" }}>
-                  Present: <strong>{liveStats.presentToday}</strong> · Late:{" "}
-                  <strong>{liveStats.lateToday}</strong> · Pending Leaves:{" "}
-                  <strong>{liveStats.pendingLeaves}</strong> · {liveStats.liveClock}
+                <div style={{ fontSize: "11px", color: "#cbd5e1", marginTop: "2px" }}> Present: <strong>{liveStats.presentToday}</strong> | Late:{" "}
+                  <strong>{liveStats.lateToday}</strong> | Pending Leaves:{" "}
+                  <strong>{liveStats.pendingLeaves}</strong> | {liveStats.liveClock}
                 </div>
               </div>
             </div>
@@ -436,11 +421,10 @@ function FloatingChatWidget() {
                   color: "#cbd5e1",
                   borderRadius: "8px",
                   padding: "5px 8px",
-                  fontSize: "12px",
+                  fontSize: "11px",
                   cursor: "pointer",
                 }}
-              >
-                🔑
+              > API Key
               </button>
               <button
                 type="button"
@@ -452,11 +436,11 @@ function FloatingChatWidget() {
                   color: "#cbd5e1",
                   borderRadius: "8px",
                   padding: "5px 8px",
-                  fontSize: "12px",
+                  fontSize: "11px",
                   cursor: "pointer",
                 }}
               >
-                {isExpanded ? "🗕" : "⛶"}
+                {isExpanded ? "Min" : "Max"}
               </button>
               <button
                 type="button"
@@ -472,13 +456,11 @@ function FloatingChatWidget() {
                   fontWeight: 700,
                   cursor: "pointer",
                 }}
-              >
-                ✕
+              > X
               </button>
             </div>
           </div>
 
-          {/* Optional Gemini API Key Drawer */}
           {showKeyModal && (
             <div
               style={{
@@ -491,7 +473,7 @@ function FloatingChatWidget() {
               }}
             >
               <div style={{ fontSize: "11.5px", color: "#cbd5e1" }}>
-                <strong>Optional Gemini 2.0 Flash Key</strong> (Built-in Real-Time Firestore Engine works automatically even without a key):
+                <strong>Optional Gemini 2.0 Flash Key</strong> (Built-in Real-Time Firestore Engine works automatically without a key):
               </div>
               <div style={{ display: "flex", gap: "6px" }}>
                 <input
@@ -522,14 +504,12 @@ function FloatingChatWidget() {
                     fontWeight: 600,
                     cursor: "pointer",
                   }}
-                >
-                  Save
+                > Save
                 </button>
               </div>
             </div>
           )}
 
-          {/* Quick Chips Bar */}
           <div
             style={{
               padding: "8px 12px",
@@ -562,7 +542,6 @@ function FloatingChatWidget() {
             ))}
           </div>
 
-          {/* Messages Stream */}
           <div
             style={{
               flex: 1,
@@ -634,7 +613,7 @@ function FloatingChatWidget() {
                             fontFamily: "monospace",
                           }}
                         >
-                          ⚡ {t}
+                          {t}
                         </span>
                       ))}
                     </div>
@@ -648,7 +627,6 @@ function FloatingChatWidget() {
 
                 <div>{formatRichText(m.text)}</div>
 
-                {/* Action navigation buttons inside assistant message */}
                 {m.actions && m.actions.length > 0 && (
                   <div
                     style={{
@@ -676,7 +654,7 @@ function FloatingChatWidget() {
                           cursor: "pointer",
                         }}
                       >
-                        {act.label} →
+                        {act.label}
                       </button>
                     ))}
                   </div>
@@ -684,7 +662,6 @@ function FloatingChatWidget() {
               </div>
             ))}
 
-            {/* Smart Leave 1-Click Confirmation Card */}
             {smartLeaveDraft && (
               <div
                 style={{
@@ -697,8 +674,7 @@ function FloatingChatWidget() {
                   gap: "8px",
                 }}
               >
-                <div style={{ fontSize: "12px", color: "#a7f3d0", fontWeight: 700 }}>
-                  ⚡ Confirm Smart Leave Submission
+                <div style={{ fontSize: "12px", color: "#a7f3d0", fontWeight: 700 }}> Confirm Smart Leave Submission
                 </div>
                 <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
                   <button
@@ -716,7 +692,7 @@ function FloatingChatWidget() {
                       cursor: "pointer",
                     }}
                   >
-                    {applyingLeave ? "Submitting..." : "✓ Submit Leave Now"}
+                    {applyingLeave ? "Submitting..." : "Submit Leave Now"}
                   </button>
                   <button
                     type="button"
@@ -730,8 +706,7 @@ function FloatingChatWidget() {
                       fontSize: "12px",
                       cursor: "pointer",
                     }}
-                  >
-                    Open Leave Form →
+                  > Open Leave Form
                   </button>
                 </div>
               </div>
@@ -746,18 +721,13 @@ function FloatingChatWidget() {
                   padding: "9px 14px",
                   fontSize: "12px",
                   color: "#c4b5fd",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
                 }}
-              >
-                <span>✨ Querying live Firestore & generating response...</span>
+              > Querying live Firestore and generating response...
               </div>
             )}
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Input Footer */}
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -776,7 +746,7 @@ function FloatingChatWidget() {
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask anything in Roman Urdu or English..."
+              placeholder="Ask about attendance, leaves, salary, policies..."
               style={{
                 flex: 1,
                 padding: "10px 13px",
@@ -804,14 +774,12 @@ function FloatingChatWidget() {
                 fontSize: "13px",
                 cursor: loading || !input.trim() ? "not-allowed" : "pointer",
               }}
-            >
-              Send
+            > Send
             </button>
           </form>
         </div>
       )}
 
-      {/* FLOATING SIDE LAUNCHER BUTTON */}
       <button
         type="button"
         onClick={() => {
@@ -840,9 +808,6 @@ function FloatingChatWidget() {
           transition: "all 0.2s ease",
         }}
       >
-        <span style={{ fontSize: "20px", lineHeight: 1 }}>
-          {isOpen ? "✕" : "💬"}
-        </span>
         <span>{isOpen ? "Close AI" : "Live AI Chat"}</span>
         <span
           style={{

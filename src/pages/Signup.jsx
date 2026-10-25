@@ -114,17 +114,14 @@ function Signup() {
           className="login-forgot"
           style={{ color: "blue", cursor: "pointer" }}
           onClick={() => navigate("/login")}
-        >
-          Already have an account?
+        > Already have an account?
         </p>
         <button className="signup-btn" type="submit">Signup</button>
       </form>
 
-      <button className="social-btn google-btn" type="button" onClick={handleGoogleLogin}>
-        Continue with Google
+      <button className="social-btn google-btn" type="button" onClick={handleGoogleLogin}> Continue with Google
       </button>
-      <button className="social-btn github-btn" type="button" onClick={handleGithubLogin}>
-        Continue with GitHub
+      <button className="social-btn github-btn" type="button" onClick={handleGithubLogin}> Continue with GitHub
       </button>
     </div>
   );

@@ -99,7 +99,7 @@ function ManageSchedule() {
         after: { employee: selectedName, schedule },
       });
 
-      alert("Schedule saved — past attendance statuses updated");
+      alert("Schedule saved - past attendance statuses updated");
     } catch (error) {
       alert(error.message);
     } finally {
@@ -126,8 +126,7 @@ function ManageSchedule() {
               strokeLinecap="round"
               strokeLinejoin="round"
             />
-          </svg>
-          Back
+          </svg> Back
         </button>
       </header>
 
@@ -135,8 +134,7 @@ function ManageSchedule() {
         <div className="sched-hero-glow" />
         <p className="sched-hero-date">Weekly check-in times</p>
         <h1 className="sched-hero-title">Set each employee's schedule</h1>
-        <p className="sched-hero-sub">
-          Pick who to configure, then set their expected time for every working day.
+        <p className="sched-hero-sub"> Pick who to configure, then set their expected time for every working day.
         </p>
       </section>
 
@@ -163,8 +161,7 @@ function ManageSchedule() {
           <div className="sched-card">
             <div className="sched-card-header">
               <span className="sched-card-title">{selectedName}'s week</span>
-              <span className="sched-card-hint">
-                Toggle a day off, or set its check-in time
+              <span className="sched-card-hint"> Toggle a day off, or set its check-in time
               </span>
             </div>
 

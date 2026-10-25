@@ -71,14 +71,11 @@ function FirstRunSetup({ onComplete }) {
             fontWeight: 600,
             marginBottom: "12px",
           }}
-        >
-          FIRST-RUN SYSTEM INITIALIZATION
+        > FIRST-RUN SYSTEM INITIALIZATION
         </div>
-        <h1 style={{ fontSize: "26px", fontWeight: 700, marginBottom: "6px" }}>
-          Set Up Your Company Workspace
+        <h1 style={{ fontSize: "26px", fontWeight: 700, marginBottom: "6px" }}> Set Up Your Company Workspace
         </h1>
-        <p style={{ color: "#94a3b8", fontSize: "14px", marginBottom: "24px" }}>
-          Configure default office hours, grace period, and provision the primary System Administrator account.
+        <p style={{ color: "#94a3b8", fontSize: "14px", marginBottom: "24px" }}> Configure default office hours, grace period, and provision the primary System Administrator account.
         </p>
 
         {error && (
@@ -99,8 +96,7 @@ function FirstRunSetup({ onComplete }) {
 
         <form onSubmit={handleSubmit} style={{ display: "grid", gap: "16px" }}>
           <div>
-            <label style={{ display: "block", fontSize: "13px", color: "#cbd5e1", marginBottom: "6px" }}>
-              Company Name *
+            <label style={{ display: "block", fontSize: "13px", color: "#cbd5e1", marginBottom: "6px" }}> Company Name *
             </label>
             <input
               type="text"
@@ -114,8 +110,7 @@ function FirstRunSetup({ onComplete }) {
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px" }}>
             <div>
-              <label style={{ display: "block", fontSize: "12px", color: "#cbd5e1", marginBottom: "6px" }}>
-                Start Time
+              <label style={{ display: "block", fontSize: "12px", color: "#cbd5e1", marginBottom: "6px" }}> Start Time
               </label>
               <input
                 type="time"
@@ -125,8 +120,7 @@ function FirstRunSetup({ onComplete }) {
               />
             </div>
             <div>
-              <label style={{ display: "block", fontSize: "12px", color: "#cbd5e1", marginBottom: "6px" }}>
-                End Time
+              <label style={{ display: "block", fontSize: "12px", color: "#cbd5e1", marginBottom: "6px" }}> End Time
               </label>
               <input
                 type="time"
@@ -136,8 +130,7 @@ function FirstRunSetup({ onComplete }) {
               />
             </div>
             <div>
-              <label style={{ display: "block", fontSize: "12px", color: "#cbd5e1", marginBottom: "6px" }}>
-                Grace (Mins)
+              <label style={{ display: "block", fontSize: "12px", color: "#cbd5e1", marginBottom: "6px" }}> Grace (Mins)
               </label>
               <input
                 type="number"
@@ -153,8 +146,7 @@ function FirstRunSetup({ onComplete }) {
           <hr style={{ borderColor: "rgba(255,255,255,0.08)", margin: "4px 0" }} />
 
           <div>
-            <label style={{ display: "block", fontSize: "13px", color: "#cbd5e1", marginBottom: "6px" }}>
-              Primary Admin Full Name *
+            <label style={{ display: "block", fontSize: "13px", color: "#cbd5e1", marginBottom: "6px" }}> Primary Admin Full Name *
             </label>
             <input
               type="text"
@@ -167,8 +159,7 @@ function FirstRunSetup({ onComplete }) {
           </div>
 
           <div>
-            <label style={{ display: "block", fontSize: "13px", color: "#cbd5e1", marginBottom: "6px" }}>
-              Admin Email *
+            <label style={{ display: "block", fontSize: "13px", color: "#cbd5e1", marginBottom: "6px" }}> Admin Email *
             </label>
             <input
               type="email"
@@ -181,8 +172,7 @@ function FirstRunSetup({ onComplete }) {
           </div>
 
           <div>
-            <label style={{ display: "block", fontSize: "13px", color: "#cbd5e1", marginBottom: "6px" }}>
-              Admin Password (min 6 chars) *
+            <label style={{ display: "block", fontSize: "13px", color: "#cbd5e1", marginBottom: "6px" }}> Admin Password (min 6 chars) *
             </label>
             <input
               type="password"
@@ -190,7 +180,7 @@ function FirstRunSetup({ onComplete }) {
               minLength={6}
               value={adminPassword}
               onChange={(e) => setAdminPassword(e.target.value)}
-              placeholder="••••••••"
+              placeholder="--------"
               style={inputStyle}
             />
           </div>

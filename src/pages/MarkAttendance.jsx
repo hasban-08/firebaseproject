@@ -161,7 +161,7 @@ function MarkAttendance() {
       const res = await selfCheckOut();
       setRecord(res);
       setMessage(
-        `Checked out! Worked ${res.workedHours}h — Final Status: ${statusLabel(res)}.`
+        `Checked out! Worked ${res.workedHours}h - Final Status: ${statusLabel(res)}.`
       );
     } catch (err) {
       setError(err.message || "Check-out failed.");
@@ -216,8 +216,7 @@ function MarkAttendance() {
               strokeLinecap="round"
               strokeLinejoin="round"
             />
-          </svg>
-          Back
+          </svg> Back
         </button>
       </header>
 
@@ -227,10 +226,9 @@ function MarkAttendance() {
         <div style={{ maxWidth: "780px", margin: "0 auto", padding: "0 20px 40px" }}>
           <section className="mark-att-hero" style={{ marginBottom: "28px" }}>
             <div className="mark-att-hero-glow" />
-            <p className="mark-att-hero-date">
-              Office Hours: {settings?.officeStartTime || "09:00"} –{" "}
-              {settings?.officeEndTime || "18:00"} · Grace:{" "}
-              {settings?.graceMinutes ?? 15}m (Late after 09:15) · Half-Day &lt;{" "}
+            <p className="mark-att-hero-date"> Office Hours: {settings?.officeStartTime || "09:00"} -{" "}
+              {settings?.officeEndTime || "18:00"} | Grace:{" "}
+              {settings?.graceMinutes ?? 15}m (Late after 09:15) | Half-Day &lt;{" "}
               {settings?.halfDayThresholdHours ?? 5}h
             </p>
             <h1 className="mark-att-hero-title">
@@ -244,10 +242,10 @@ function MarkAttendance() {
               {record
                 ? `Check-In: ${formatTime12(record.checkInTime)}${
                     record.checkOutTime
-                      ? ` · Check-Out: ${formatTime12(record.checkOutTime)} (${
+                      ? ` | Check-Out: ${formatTime12(record.checkOutTime)} (${
                           record.workedHours ?? 0
                         }h worked)`
-                      : " · Remember to check out before leaving."
+                      : " | Remember to check out before leaving."
                   }`
                 : "Click Check In below to stamp your official server attendance."}
             </p>
@@ -313,7 +311,7 @@ function MarkAttendance() {
                   cursor: "pointer",
                 }}
               >
-                📍 {coords ? `GPS Locked (${distanceMeters ?? 0}m from office)` : "Verify GPS Radius"}
+                 {coords ? `GPS Locked (${distanceMeters ?? 0}m from office)` : "Verify GPS Radius"}
               </button>
               <button
                 type="button"
@@ -328,7 +326,7 @@ function MarkAttendance() {
                   cursor: "pointer",
                 }}
               >
-                📷 {cameraActive ? "Close Camera" : "Verify Camera / Face"}
+                 {cameraActive ? "Close Camera" : "Verify Camera / Face"}
               </button>
             </div>
 
@@ -377,7 +375,7 @@ function MarkAttendance() {
                   cursor: busy ? "not-allowed" : "pointer",
                 }}
               >
-                {busy ? "Processing..." : record ? "Checked In (Test 409)" : "✓ Check In Now"}
+                {busy ? "Processing..." : record ? "Checked In (Test 409)" : " Check In Now"}
               </button>
 
               {record && !record.checkOutTime && (
@@ -396,7 +394,7 @@ function MarkAttendance() {
                     cursor: busy ? "not-allowed" : "pointer",
                   }}
                 >
-                  {busy ? "Saving..." : "⏹ Check Out Now"}
+                  {busy ? "Saving..." : " Check Out Now"}
                 </button>
               )}
             </div>
@@ -405,8 +403,7 @@ function MarkAttendance() {
               className="mark-att-link"
               style={{ marginTop: "18px" }}
               onClick={() => navigate("/my-attendance")}
-            >
-              View Full Monthly Attendance History →
+            > View Full Monthly Attendance History ->
             </p>
           </section>
 
@@ -419,11 +416,9 @@ function MarkAttendance() {
               padding: "24px",
             }}
           >
-            <h2 style={{ fontSize: "18px", fontWeight: 700, marginBottom: "6px", color: "#f8fafc" }}>
-              Request Attendance Correction
+            <h2 style={{ fontSize: "18px", fontWeight: 700, marginBottom: "6px", color: "#f8fafc" }}> Request Attendance Correction
             </h2>
-            <p style={{ fontSize: "13px", color: "#94a3b8", marginBottom: "18px" }}>
-              Missed a check-in or check-out? Submit a correction request with your reason for HR review.
+            <p style={{ fontSize: "13px", color: "#94a3b8", marginBottom: "18px" }}> Missed a check-in or check-out? Submit a correction request with your reason for HR review.
             </p>
 
             <form
@@ -501,8 +496,7 @@ function MarkAttendance() {
 
             {corrections.length > 0 && (
               <div>
-                <h3 style={{ fontSize: "14px", color: "#cbd5e1", marginBottom: "10px" }}>
-                  Your Correction Requests
+                <h3 style={{ fontSize: "14px", color: "#cbd5e1", marginBottom: "10px" }}> Your Correction Requests
                 </h3>
                 <div style={{ display: "grid", gap: "8px" }}>
                   {corrections.map((c) => (
@@ -519,11 +513,10 @@ function MarkAttendance() {
                       }}
                     >
                       <div>
-                        <strong>{c.date}</strong> ({c.requestedCheckIn} –{" "}
-                        {c.requestedCheckOut}) · {c.reason}
+                        <strong>{c.date}</strong> ({c.requestedCheckIn} -{" "}
+                        {c.requestedCheckOut}) | {c.reason}
                         {c.adminComment && (
-                          <div style={{ fontSize: "11.5px", color: "#a78bfa" }}>
-                            HR Note: {c.adminComment}
+                          <div style={{ fontSize: "11.5px", color: "#a78bfa" }}> HR Note: {c.adminComment}
                           </div>
                         )}
                       </div>

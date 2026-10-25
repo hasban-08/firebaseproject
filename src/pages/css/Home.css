@@ -2,7 +2,7 @@
 
 * { box-sizing: border-box; }
 
-/* ── Layout Shell ── */
+/*  Layout Shell  */
 .home-layout {
   display: flex; height: 100vh; background-color: #0a0a0f;
   background-image:
@@ -16,7 +16,7 @@
   .home-layout { flex-direction: column; overflow-y: auto; height: auto; min-height: 100vh; }
 }
 
-/* ── Sidebar ── */
+/*  Sidebar  */
 .home-sidebar {
   width: 270px; background: rgba(255, 255, 255, 0.02);
   border-right: 1px solid rgba(255, 255, 255, 0.06);
@@ -61,7 +61,7 @@
 }
 .home-logout-btn:hover { background: rgba(255,255,255,0.1); color: #fff; border-color: rgba(255,255,255,0.2); }
 
-/* ── Main Area ── */
+/*  Main Area  */
 .home-main { flex: 1; padding: 36px 44px; overflow-y: auto; }
 @media (max-width: 768px) { .home-main { padding: 24px 20px; overflow-y: visible; } }
 

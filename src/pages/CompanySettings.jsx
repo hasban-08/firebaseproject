@@ -252,18 +252,16 @@ function CompanySettings() {
     <div style={pageStyle}>
       <header style={topbarStyle}>
         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-          <div style={avatarBadge}>⚙</div>
+          <div style={avatarBadge}></div>
           <div>
-            <h1 style={{ fontSize: "19px", fontWeight: 700, margin: 0 }}>
-              HR & Company Configuration
+            <h1 style={{ fontSize: "19px", fontWeight: 700, margin: 0 }}> HR & Company Configuration
             </h1>
-            <span style={{ fontSize: "12px", color: "#a78bfa" }}>
-              User Provisioning · Office Rules · Departments · Holidays · Quotas
+            <span style={{ fontSize: "12px", color: "#a78bfa" }}> User Provisioning | Office Rules | Departments | Holidays | Quotas
             </span>
           </div>
         </div>
         <button onClick={() => navigate("/")} style={backBtnStyle}>
-          ← Back to Dashboard
+          <- Back to Dashboard
         </button>
       </header>
 
@@ -271,9 +269,9 @@ function CompanySettings() {
         {/* Navigation Tabs */}
         <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", marginBottom: "22px" }}>
           {[
-            ["users", "👥 Employee & HR Onboarding"],
-            ["company", "🏢 Office Timings, Grace & GPS"],
-            ["master", "📅 Departments, Holidays & Leave Quotas"],
+            ["users", " Employee & HR Onboarding"],
+            ["company", " Office Timings, Grace & GPS"],
+            ["master", " Departments, Holidays & Leave Quotas"],
           ].map(([key, label]) => (
             <button
               key={key}
@@ -317,11 +315,9 @@ function CompanySettings() {
           <div style={{ display: "grid", gap: "24px" }}>
             {/* Register Employee / HR Form */}
             <section style={cardStyle}>
-              <h2 style={{ fontSize: "18px", fontWeight: 700, marginBottom: "6px" }}>
-                Register New Employee {myRole === "admin" ? "or HR / Admin" : ""}
+              <h2 style={{ fontSize: "18px", fontWeight: 700, marginBottom: "6px" }}> Register New Employee {myRole === "admin" ? "or HR / Admin" : ""}
               </h2>
-              <p style={{ fontSize: "13px", color: "#94a3b8", marginBottom: "18px" }}>
-                Creates Firebase Auth login with a temporary password (`mustChangePassword: true`). HR fills official CNIC, Bank, and Basic Salary (`Gross = 1.5 × Basic`).
+              <p style={{ fontSize: "13px", color: "#94a3b8", marginBottom: "18px" }}> Creates Firebase Auth login with a temporary password (`mustChangePassword: true`). HR fills official CNIC, Bank, and Basic Salary (`Gross = 1.5 x Basic`).
               </p>
 
               <form
@@ -362,8 +358,7 @@ function CompanySettings() {
                     style={inputStyle}
                     placeholder="TempPass123"
                     value={newUser.tempPassword}
-                    onChange={(e) =>
-                      setNewUser({ ...newUser, tempPassword: e.target.value })
+                    onChange={(e) => setNewUser({ ...newUser, tempPassword: e.target.value })
                     }
                   />
                 </div>
@@ -384,8 +379,7 @@ function CompanySettings() {
                   <select
                     style={inputStyle}
                     value={newUser.department}
-                    onChange={(e) =>
-                      setNewUser({ ...newUser, department: e.target.value })
+                    onChange={(e) => setNewUser({ ...newUser, department: e.target.value })
                     }
                   >
                     {deptList.map((d) => (
@@ -401,22 +395,19 @@ function CompanySettings() {
                     style={inputStyle}
                     placeholder="Software Engineer"
                     value={newUser.designation}
-                    onChange={(e) =>
-                      setNewUser({ ...newUser, designation: e.target.value })
+                    onChange={(e) => setNewUser({ ...newUser, designation: e.target.value })
                     }
                   />
                 </div>
                 <div>
-                  <label style={labelStyle}>
-                    Basic Salary (Gross = Rs. {Math.round((Number(newUser.basicSalary) || 0) * 1.5).toLocaleString()})
+                  <label style={labelStyle}> Basic Salary (Gross = Rs. {Math.round((Number(newUser.basicSalary) || 0) * 1.5).toLocaleString()})
                   </label>
                   <input
                     type="number"
                     min="0"
                     style={inputStyle}
                     value={newUser.basicSalary}
-                    onChange={(e) =>
-                      setNewUser({ ...newUser, basicSalary: e.target.value })
+                    onChange={(e) => setNewUser({ ...newUser, basicSalary: e.target.value })
                     }
                   />
                 </div>
@@ -426,8 +417,7 @@ function CompanySettings() {
                     style={inputStyle}
                     placeholder="42101-1234567-1"
                     value={newUser.cnic}
-                    onChange={(e) =>
-                      setNewUser({ ...newUser, cnic: formatCnic(e.target.value) })
+                    onChange={(e) => setNewUser({ ...newUser, cnic: formatCnic(e.target.value) })
                     }
                   />
                 </div>
@@ -437,8 +427,7 @@ function CompanySettings() {
                     style={inputStyle}
                     placeholder="Meezan Bank"
                     value={newUser.providerName}
-                    onChange={(e) =>
-                      setNewUser({ ...newUser, providerName: e.target.value })
+                    onChange={(e) => setNewUser({ ...newUser, providerName: e.target.value })
                     }
                   />
                 </div>
@@ -448,8 +437,7 @@ function CompanySettings() {
                     style={inputStyle}
                     placeholder="010203040506"
                     value={newUser.accountNumber}
-                    onChange={(e) =>
-                      setNewUser({ ...newUser, accountNumber: e.target.value })
+                    onChange={(e) => setNewUser({ ...newUser, accountNumber: e.target.value })
                     }
                   />
                 </div>
@@ -463,8 +451,7 @@ function CompanySettings() {
 
             {/* Existing Users Table */}
             <section style={cardStyle}>
-              <h2 style={{ fontSize: "18px", fontWeight: 700, marginBottom: "14px" }}>
-                Directory & Account Controls ({users.length} Users)
+              <h2 style={{ fontSize: "18px", fontWeight: 700, marginBottom: "14px" }}> Directory & Account Controls ({users.length} Users)
               </h2>
 
               <div style={{ overflowX: "auto" }}>
@@ -526,14 +513,13 @@ function CompanySettings() {
                           </td>
                           <td style={{ padding: "10px" }}>
                             <div>Basic: Rs. {basic.toLocaleString()}</div>
-                            <div style={{ fontSize: "11.5px", color: "#a78bfa" }}>
-                              Gross: Rs. {gross.toLocaleString()}
+                            <div style={{ fontSize: "11.5px", color: "#a78bfa" }}> Gross: Rs. {gross.toLocaleString()}
                             </div>
                           </td>
                           <td style={{ padding: "10px" }}>
-                            <div>{u.personalInfo?.cnic || "—"}</div>
+                            <div>{u.personalInfo?.cnic || "-"}</div>
                             <div style={{ fontSize: "11.5px", color: "#94a3b8" }}>
-                              {u.bankDetails?.providerName || "—"} ({u.bankDetails?.accountNumber || "—"})
+                              {u.bankDetails?.providerName || "-"} ({u.bankDetails?.accountNumber || "-"})
                             </div>
                           </td>
                           <td style={{ padding: "10px" }}>
@@ -548,8 +534,7 @@ function CompanySettings() {
                           <td style={{ padding: "10px", display: "flex", gap: "6px", flexWrap: "wrap" }}>
                             <button
                               type="button"
-                              onClick={() =>
-                                setEditingUser({
+                              onClick={() => setEditingUser({
                                   ...u,
                                   basicSalary: basic,
                                   cnic: u.personalInfo?.cnic || "",
@@ -558,8 +543,7 @@ function CompanySettings() {
                                 })
                               }
                               style={smallBtnStyle}
-                            >
-                              Edit HR Info
+                            > Edit HR Info
                             </button>
                             {u.email && (
                               <button
@@ -573,8 +557,7 @@ function CompanySettings() {
                                   }
                                 }}
                                 style={smallBtnStyle}
-                              >
-                                Reset Pass
+                              > Reset Pass
                               </button>
                             )}
                             {myRole === "admin" && u.uid !== auth.currentUser?.uid && (
@@ -610,8 +593,7 @@ function CompanySettings() {
             {/* Edit Modal */}
             {editingUser && (
               <section style={{ ...cardStyle, border: "1px solid #8b5cf6" }}>
-                <h3 style={{ fontSize: "16px", marginBottom: "12px" }}>
-                  Editing Official Record: {editingUser.name}
+                <h3 style={{ fontSize: "16px", marginBottom: "12px" }}> Editing Official Record: {editingUser.name}
                 </h3>
                 <form
                   onSubmit={handleUpdateUser}
@@ -626,8 +608,7 @@ function CompanySettings() {
                     <input
                       style={inputStyle}
                       value={editingUser.name || ""}
-                      onChange={(e) =>
-                        setEditingUser({ ...editingUser, name: e.target.value })
+                      onChange={(e) => setEditingUser({ ...editingUser, name: e.target.value })
                       }
                     />
                   </div>
@@ -637,8 +618,7 @@ function CompanySettings() {
                       style={inputStyle}
                       value={editingUser.role || "employee"}
                       disabled={myRole !== "admin"}
-                      onChange={(e) =>
-                        setEditingUser({ ...editingUser, role: e.target.value })
+                      onChange={(e) => setEditingUser({ ...editingUser, role: e.target.value })
                       }
                     >
                       <option value="employee">employee</option>
@@ -651,8 +631,7 @@ function CompanySettings() {
                     <select
                       style={inputStyle}
                       value={editingUser.department || "General"}
-                      onChange={(e) =>
-                        setEditingUser({ ...editingUser, department: e.target.value })
+                      onChange={(e) => setEditingUser({ ...editingUser, department: e.target.value })
                       }
                     >
                       {deptList.map((d) => (
@@ -667,8 +646,7 @@ function CompanySettings() {
                     <input
                       style={inputStyle}
                       value={editingUser.designation || ""}
-                      onChange={(e) =>
-                        setEditingUser({ ...editingUser, designation: e.target.value })
+                      onChange={(e) => setEditingUser({ ...editingUser, designation: e.target.value })
                       }
                     />
                   </div>
@@ -678,8 +656,7 @@ function CompanySettings() {
                       type="number"
                       style={inputStyle}
                       value={editingUser.basicSalary ?? 0}
-                      onChange={(e) =>
-                        setEditingUser({ ...editingUser, basicSalary: e.target.value })
+                      onChange={(e) => setEditingUser({ ...editingUser, basicSalary: e.target.value })
                       }
                     />
                   </div>
@@ -688,8 +665,7 @@ function CompanySettings() {
                     <input
                       style={inputStyle}
                       value={editingUser.cnic || ""}
-                      onChange={(e) =>
-                        setEditingUser({
+                      onChange={(e) => setEditingUser({
                           ...editingUser,
                           cnic: formatCnic(e.target.value),
                         })
@@ -701,8 +677,7 @@ function CompanySettings() {
                     <input
                       style={inputStyle}
                       value={editingUser.providerName || ""}
-                      onChange={(e) =>
-                        setEditingUser({
+                      onChange={(e) => setEditingUser({
                           ...editingUser,
                           providerName: e.target.value,
                         })
@@ -714,8 +689,7 @@ function CompanySettings() {
                     <input
                       style={inputStyle}
                       value={editingUser.accountNumber || ""}
-                      onChange={(e) =>
-                        setEditingUser({
+                      onChange={(e) => setEditingUser({
                           ...editingUser,
                           accountNumber: e.target.value,
                         })
@@ -723,15 +697,13 @@ function CompanySettings() {
                     />
                   </div>
                   <div style={{ display: "flex", gap: "8px", alignItems: "flex-end" }}>
-                    <button type="submit" style={primaryBtnStyle}>
-                      Save Changes
+                    <button type="submit" style={primaryBtnStyle}> Save Changes
                     </button>
                     <button
                       type="button"
                       onClick={() => setEditingUser(null)}
                       style={backBtnStyle}
-                    >
-                      Cancel
+                    > Cancel
                     </button>
                   </div>
                 </form>
@@ -740,11 +712,9 @@ function CompanySettings() {
           </div>
         ) : activeTab === "company" ? (
           <section style={cardStyle}>
-            <h2 style={{ fontSize: "18px", fontWeight: 700, marginBottom: "8px" }}>
-              Company Office Timings, Grace Period & GPS Radius
+            <h2 style={{ fontSize: "18px", fontWeight: 700, marginBottom: "8px" }}> Company Office Timings, Grace Period & GPS Radius
             </h2>
-            <p style={{ fontSize: "13px", color: "#94a3b8", marginBottom: "18px" }}>
-              Brief rules default: Office Start 09:00, Grace 15 mins (Late after 09:15), Half-Day if worked &lt; 5 hours.
+            <p style={{ fontSize: "13px", color: "#94a3b8", marginBottom: "18px" }}> Brief rules default: Office Start 09:00, Grace 15 mins (Late after 09:15), Half-Day if worked &lt; 5 hours.
             </p>
 
             <form onSubmit={handleSaveSettings} style={{ display: "grid", gap: "18px" }}>
@@ -760,8 +730,7 @@ function CompanySettings() {
                   <input
                     style={inputStyle}
                     value={settings.companyName || ""}
-                    onChange={(e) =>
-                      setSettings({ ...settings, companyName: e.target.value })
+                    onChange={(e) => setSettings({ ...settings, companyName: e.target.value })
                     }
                   />
                 </div>
@@ -771,8 +740,7 @@ function CompanySettings() {
                     type="time"
                     style={inputStyle}
                     value={settings.officeStartTime || "09:00"}
-                    onChange={(e) =>
-                      setSettings({ ...settings, officeStartTime: e.target.value })
+                    onChange={(e) => setSettings({ ...settings, officeStartTime: e.target.value })
                     }
                   />
                 </div>
@@ -782,8 +750,7 @@ function CompanySettings() {
                     type="time"
                     style={inputStyle}
                     value={settings.officeEndTime || "18:00"}
-                    onChange={(e) =>
-                      setSettings({ ...settings, officeEndTime: e.target.value })
+                    onChange={(e) => setSettings({ ...settings, officeEndTime: e.target.value })
                     }
                   />
                 </div>
@@ -795,8 +762,7 @@ function CompanySettings() {
                     max="120"
                     style={inputStyle}
                     value={settings.graceMinutes ?? 15}
-                    onChange={(e) =>
-                      setSettings({ ...settings, graceMinutes: Number(e.target.value) })
+                    onChange={(e) => setSettings({ ...settings, graceMinutes: Number(e.target.value) })
                     }
                   />
                 </div>
@@ -808,8 +774,7 @@ function CompanySettings() {
                     max="10"
                     style={inputStyle}
                     value={settings.halfDayThresholdHours ?? 5}
-                    onChange={(e) =>
-                      setSettings({
+                    onChange={(e) => setSettings({
                         ...settings,
                         halfDayThresholdHours: Number(e.target.value),
                       })
@@ -859,8 +824,7 @@ function CompanySettings() {
                   border: "1px solid rgba(255,255,255,0.08)",
                 }}
               >
-                <h3 style={{ fontSize: "15px", marginBottom: "10px" }}>
-                  Office GPS Location & Geofence Radius (Haversine Check)
+                <h3 style={{ fontSize: "15px", marginBottom: "10px" }}> Office GPS Location & Geofence Radius (Haversine Check)
                 </h3>
                 <div
                   style={{
@@ -876,8 +840,7 @@ function CompanySettings() {
                       step="any"
                       style={inputStyle}
                       value={settings.officeLocation?.lat ?? 24.8607}
-                      onChange={(e) =>
-                        setSettings({
+                      onChange={(e) => setSettings({
                           ...settings,
                           officeLocation: {
                             ...settings.officeLocation,
@@ -894,8 +857,7 @@ function CompanySettings() {
                       step="any"
                       style={inputStyle}
                       value={settings.officeLocation?.lng ?? 67.0011}
-                      onChange={(e) =>
-                        setSettings({
+                      onChange={(e) => setSettings({
                           ...settings,
                           officeLocation: {
                             ...settings.officeLocation,
@@ -912,8 +874,7 @@ function CompanySettings() {
                       min="50"
                       style={inputStyle}
                       value={settings.officeLocation?.radiusMeters ?? 500}
-                      onChange={(e) =>
-                        setSettings({
+                      onChange={(e) => setSettings({
                           ...settings,
                           officeLocation: {
                             ...settings.officeLocation,
@@ -928,8 +889,7 @@ function CompanySettings() {
                       type="button"
                       onClick={handleUseCurrentGps}
                       style={backBtnStyle}
-                    >
-                      📍 Use Current GPS
+                    > Use Current GPS
                     </button>
                   </div>
                 </div>
@@ -939,8 +899,7 @@ function CompanySettings() {
                     <input
                       type="checkbox"
                       checked={!!settings.officeLocation?.enforceLocation}
-                      onChange={(e) =>
-                        setSettings({
+                      onChange={(e) => setSettings({
                           ...settings,
                           officeLocation: {
                             ...settings.officeLocation,
@@ -948,29 +907,25 @@ function CompanySettings() {
                           },
                         })
                       }
-                    />
-                    Strictly enforce GPS radius on Employee Check-In
+                    /> Strictly enforce GPS radius on Employee Check-In
                   </label>
 
                   <label style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "13px" }}>
                     <input
                       type="checkbox"
                       checked={settings.latePenaltyEnabled !== false}
-                      onChange={(e) =>
-                        setSettings({
+                      onChange={(e) => setSettings({
                           ...settings,
                           latePenaltyEnabled: e.target.checked,
                         })
                       }
-                    />
-                    Enable Late Penalty in Payroll (3 Lates = 0.5 Day Deduction)
+                    /> Enable Late Penalty in Payroll (3 Lates = 0.5 Day Deduction)
                   </label>
                 </div>
               </div>
 
               <div>
-                <button type="submit" style={primaryBtnStyle}>
-                  Save Company Configuration
+                <button type="submit" style={primaryBtnStyle}> Save Company Configuration
                 </button>
               </div>
             </form>
@@ -979,8 +934,7 @@ function CompanySettings() {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "20px" }}>
             {/* Departments */}
             <section style={cardStyle}>
-              <h3 style={{ fontSize: "16px", fontWeight: 700, marginBottom: "12px" }}>
-                Departments
+              <h3 style={{ fontSize: "16px", fontWeight: 700, marginBottom: "12px" }}> Departments
               </h3>
               <form onSubmit={handleAddDepartment} style={{ display: "flex", gap: "8px", marginBottom: "14px" }}>
                 <input
@@ -989,8 +943,7 @@ function CompanySettings() {
                   value={newDept}
                   onChange={(e) => setNewDept(e.target.value)}
                 />
-                <button type="submit" style={primaryBtnStyle}>
-                  Add
+                <button type="submit" style={primaryBtnStyle}> Add
                 </button>
               </form>
               <div style={{ display: "grid", gap: "8px" }}>
@@ -1013,8 +966,7 @@ function CompanySettings() {
                         await loadAll();
                       }}
                       style={{ background: "none", border: "none", color: "#f87171", cursor: "pointer" }}
-                    >
-                      Remove
+                    > Remove
                     </button>
                   </div>
                 ))}
@@ -1023,8 +975,7 @@ function CompanySettings() {
 
             {/* Designations */}
             <section style={cardStyle}>
-              <h3 style={{ fontSize: "16px", fontWeight: 700, marginBottom: "12px" }}>
-                Designations
+              <h3 style={{ fontSize: "16px", fontWeight: 700, marginBottom: "12px" }}> Designations
               </h3>
               <form onSubmit={handleAddDesignation} style={{ display: "grid", gap: "8px", marginBottom: "14px" }}>
                 <input
@@ -1037,8 +988,7 @@ function CompanySettings() {
                   <select
                     style={inputStyle}
                     value={newDesig.department}
-                    onChange={(e) =>
-                      setNewDesig({ ...newDesig, department: e.target.value })
+                    onChange={(e) => setNewDesig({ ...newDesig, department: e.target.value })
                     }
                   >
                     {deptList.map((d) => (
@@ -1047,8 +997,7 @@ function CompanySettings() {
                       </option>
                     ))}
                   </select>
-                  <button type="submit" style={primaryBtnStyle}>
-                    Add
+                  <button type="submit" style={primaryBtnStyle}> Add
                   </button>
                 </div>
               </form>
@@ -1066,7 +1015,7 @@ function CompanySettings() {
                     }}
                   >
                     <span>
-                      <strong>{des.title}</strong> · {des.department}
+                      <strong>{des.title}</strong> | {des.department}
                     </span>
                     <button
                       type="button"
@@ -1075,8 +1024,7 @@ function CompanySettings() {
                         await loadAll();
                       }}
                       style={{ background: "none", border: "none", color: "#f87171", cursor: "pointer" }}
-                    >
-                      Remove
+                    > Remove
                     </button>
                   </div>
                 ))}
@@ -1085,8 +1033,7 @@ function CompanySettings() {
 
             {/* Public Holidays */}
             <section style={cardStyle}>
-              <h3 style={{ fontSize: "16px", fontWeight: 700, marginBottom: "12px" }}>
-                Public Holidays (Skipped in Leave & Payroll)
+              <h3 style={{ fontSize: "16px", fontWeight: 700, marginBottom: "12px" }}> Public Holidays (Skipped in Leave & Payroll)
               </h3>
               <form onSubmit={handleAddHoliday} style={{ display: "grid", gap: "8px", marginBottom: "14px" }}>
                 <input
@@ -1100,19 +1047,16 @@ function CompanySettings() {
                     type="date"
                     style={inputStyle}
                     value={newHoliday.date}
-                    onChange={(e) =>
-                      setNewHoliday({ ...newHoliday, date: e.target.value })
+                    onChange={(e) => setNewHoliday({ ...newHoliday, date: e.target.value })
                     }
                   />
-                  <button type="submit" style={primaryBtnStyle}>
-                    Add
+                  <button type="submit" style={primaryBtnStyle}> Add
                   </button>
                 </div>
               </form>
               <div style={{ display: "grid", gap: "8px" }}>
                 {holidays.length === 0 && (
-                  <p style={{ fontSize: "12.5px", color: "#94a3b8" }}>
-                    No public holidays configured yet.
+                  <p style={{ fontSize: "12.5px", color: "#94a3b8" }}> No public holidays configured yet.
                   </p>
                 )}
                 {holidays.map((h) => (
@@ -1128,7 +1072,7 @@ function CompanySettings() {
                     }}
                   >
                     <span>
-                      <strong>{h.date}</strong> — {h.name}
+                      <strong>{h.date}</strong> - {h.name}
                     </span>
                     <button
                       type="button"
@@ -1137,8 +1081,7 @@ function CompanySettings() {
                         await loadAll();
                       }}
                       style={{ background: "none", border: "none", color: "#f87171", cursor: "pointer" }}
-                    >
-                      Remove
+                    > Remove
                     </button>
                   </div>
                 ))}
@@ -1147,8 +1090,7 @@ function CompanySettings() {
 
             {/* Leave Quotas Policy */}
             <section style={cardStyle}>
-              <h3 style={{ fontSize: "16px", fontWeight: 700, marginBottom: "12px" }}>
-                Standard Leave Quotas (Annual Policy)
+              <h3 style={{ fontSize: "16px", fontWeight: 700, marginBottom: "12px" }}> Standard Leave Quotas (Annual Policy)
               </h3>
               <div style={{ display: "grid", gap: "10px" }}>
                 {Object.values(DEFAULT_LEAVE_QUOTAS).map((lt) => (

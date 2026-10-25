@@ -9,8 +9,7 @@ export function AttendanceTrendChart({ data = [] }) {
 
   if (!data || data.length === 0) {
     return (
-      <div style={{ color: "#94a3b8", fontSize: "13px", padding: "40px 0", textAlign: "center" }}>
-        No attendance data for selected date range.
+      <div style={{ color: "#94a3b8", fontSize: "13px", padding: "40px 0", textAlign: "center" }}> No attendance data for selected date range.
       </div>
     );
   }
@@ -29,8 +28,7 @@ export function AttendanceTrendChart({ data = [] }) {
     ...data.map((d) => Math.max(Number(d.Present) || 0, Number(d.Late) || 0, Number(d.Absent) || 0))
   );
 
-  const getX = (i) =>
-    data.length <= 1
+  const getX = (i) => data.length <= 1
       ? padLeft + plotW / 2
       : padLeft + (i / (data.length - 1)) * plotW;
   const getY = (val) => padTop + plotH - ((Number(val) || 0) / maxVal) * plotH;
@@ -152,17 +150,17 @@ export function AttendanceTrendChart({ data = [] }) {
       >
         <div style={{ display: "flex", gap: "14px" }}>
           <span>
-            <span style={{ color: "#8b5cf6", fontWeight: 800 }}>●</span> Present
+            <span style={{ color: "#8b5cf6", fontWeight: 800 }}></span> Present
           </span>
           <span>
-            <span style={{ color: "#f59e0b", fontWeight: 800 }}>●</span> Late (&gt;09:15)
+            <span style={{ color: "#f59e0b", fontWeight: 800 }}></span> Late (&gt;09:15)
           </span>
         </div>
         {hoverIdx !== null && data[hoverIdx] && (
           <div style={{ color: "#e2e8f0", fontSize: "11.5px" }}>
             <strong>{data[hoverIdx].fullDate || data[hoverIdx].date}</strong>: Present{" "}
-            <strong style={{ color: "#a78bfa" }}>{data[hoverIdx].Present}</strong> · Late{" "}
-            <strong style={{ color: "#fbbf24" }}>{data[hoverIdx].Late}</strong> · Absent{" "}
+            <strong style={{ color: "#a78bfa" }}>{data[hoverIdx].Present}</strong> | Late{" "}
+            <strong style={{ color: "#fbbf24" }}>{data[hoverIdx].Late}</strong> | Absent{" "}
             <strong style={{ color: "#f87171" }}>{data[hoverIdx].Absent}</strong>
           </div>
         )}
@@ -179,8 +177,7 @@ export function DepartmentAbsenteeismChart({ data = [] }) {
 
   if (!data || data.length === 0) {
     return (
-      <div style={{ color: "#94a3b8", fontSize: "13px", padding: "40px 0", textAlign: "center" }}>
-        No department records found.
+      <div style={{ color: "#94a3b8", fontSize: "13px", padding: "40px 0", textAlign: "center" }}> No department records found.
       </div>
     );
   }
@@ -295,16 +292,16 @@ export function DepartmentAbsenteeismChart({ data = [] }) {
       >
         <div style={{ display: "flex", gap: "14px" }}>
           <span>
-            <span style={{ color: "#ef4444", fontWeight: 800 }}>■</span> Absent Days
+            <span style={{ color: "#ef4444", fontWeight: 800 }}></span> Absent Days
           </span>
           <span>
-            <span style={{ color: "#f59e0b", fontWeight: 800 }}>■</span> Late Arrivals
+            <span style={{ color: "#f59e0b", fontWeight: 800 }}></span> Late Arrivals
           </span>
         </div>
         {hoverIdx !== null && data[hoverIdx] && (
           <div style={{ color: "#e2e8f0", fontSize: "11.5px" }}>
             <strong>{data[hoverIdx].department}</strong>: Absent{" "}
-            <strong style={{ color: "#fca5a5" }}>{data[hoverIdx].absentDays}d</strong> · Late{" "}
+            <strong style={{ color: "#fca5a5" }}>{data[hoverIdx].absentDays}d</strong> | Late{" "}
             <strong style={{ color: "#fbbf24" }}>{data[hoverIdx].lateRecords}</strong> (Staff:{" "}
             {data[hoverIdx].employees})
           </div>

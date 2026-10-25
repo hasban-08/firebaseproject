@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap');
 
-/* ── Navbar ── */
+/*  Navbar  */
 .header-navbar {
   position: sticky;
   top: 0;
@@ -23,7 +23,7 @@
   justify-content: space-between;
 }
 
-/* ── Brand ── */
+/*  Brand  */
 .header-brand {
   display: flex;
   align-items: center;
@@ -53,14 +53,14 @@
   opacity: 0.8;
 }
 
-/* ── Nav ── */
+/*  Nav  */
 .header-nav {
   display: flex;
   align-items: center;
   gap: 0.3rem;
 }
 
-/* ── Nav item: icon + slide-in label ── */
+/*  Nav item: icon + slide-in label  */
 .header-nav-item {
   display: flex;
   align-items: center;
@@ -79,7 +79,7 @@
   background: rgba(167, 139, 250, 0.12);
 }
 
-/* Icon — always visible */
+/* Icon - always visible */
 .header-nav-icon {
   display: flex;
   align-items: center;
@@ -91,7 +91,7 @@
   transform: translateX(-2px);
 }
 
-/* Label — hidden by default, slides in on hover */
+/* Label - hidden by default, slides in on hover */
 .header-nav-label {
   font-family: 'DM Sans', sans-serif;
   font-size: 0.88rem;
@@ -113,7 +113,7 @@
   margin-left: 0.45rem;
 }
 
-/* ── Logout button ── */
+/*  Logout button  */
 .header-logout-btn {
   display: flex;
   align-items: center;
@@ -142,7 +142,7 @@
   transform: translateY(0);
 }
 
-/* ── Mobile ── */
+/*  Mobile  */
 @media (max-width: 600px) {
   .header-brand span {
     display: none;

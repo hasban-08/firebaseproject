@@ -3,12 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { askHrAiAssistant } from "../services/hrServer";
 
 const SAMPLE_PROMPTS = [
-  "Aaj kon kon present aur late hai?",
-  "Mera leave balance kitna baaqi hai?",
+  "Who is present and late today?",
+  "What is my remaining leave balance?",
   "What is the company grace period, half-day, and payroll tax policy?",
-  "Salary 95000 par tax aur net salary kitni hogi?",
+  "Calculate tax and net salary for basic salary 95000",
   "Show payroll summary for this month",
-  "Recent audit trail logs dikhao",
+  "Show recent audit trail logs",
 ];
 
 function AiAssistant() {
@@ -16,7 +16,7 @@ function AiAssistant() {
   const [messages, setMessages] = useState([
     {
       role: "assistant",
-      text: "Assalam-o-Alaikum! I am your **WorkPulse HR & Payroll AI Assistant**.\n\nI can answer questions using live server tools (`get_headcount`, `get_attendance_summary`, `get_late_comers`, `get_leave_summary`, `get_my_leave_balance`, `get_payroll_summary`, `search_employees`) and company policy rules in **English** or **Roman Urdu**.",
+      text: "Welcome! I am your **WorkPulse HR & Payroll AI Assistant**.\n\nI can answer questions using live server tools (`get_headcount`, `get_attendance_summary`, `get_late_comers`, `get_leave_summary`, `get_my_leave_balance`, `get_payroll_summary`, `search_employees`) and company policy rules.",
       toolsUsed: [],
       aiGenerated: true,
     },
@@ -49,7 +49,7 @@ function AiAssistant() {
         ...prev,
         {
           role: "assistant",
-          text: `⚠️ Error: ${err.message || "AI request failed."}`,
+          text: `Error: ${err.message || "AI request failed."}`,
           toolsUsed: [],
           aiGenerated: true,
         },
@@ -89,17 +89,15 @@ function AiAssistant() {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              fontSize: "19px",
+              fontSize: "14px",
+              fontWeight: 800,
             }}
-          >
-            ✨
+          > AI
           </div>
           <div>
-            <h1 style={{ fontSize: "18px", fontWeight: 700, margin: 0 }}>
-              WorkPulse AI Assistant (Gemini Tool-Calling)
+            <h1 style={{ fontSize: "18px", fontWeight: 700, margin: 0 }}> WorkPulse AI Assistant (Gemini Tool-Calling)
             </h1>
-            <span style={{ fontSize: "12px", color: "#a78bfa" }}>
-              Role-Scoped HR Tools · Policy Q&A · Roman Urdu & English · 20 req/hr Guardrail
+            <span style={{ fontSize: "12px", color: "#a78bfa" }}> Role-Scoped HR Tools | Policy Q&A | 20 req/hr Guardrail
             </span>
           </div>
         </div>
@@ -113,8 +111,7 @@ function AiAssistant() {
             color: "#e2e8f0",
             cursor: "pointer",
           }}
-        >
-          ← Back to Dashboard
+        > Back to Dashboard
         </button>
       </header>
 
@@ -130,7 +127,6 @@ function AiAssistant() {
           gap: "16px",
         }}
       >
-        {/* Quick Prompts */}
         <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
           {SAMPLE_PROMPTS.map((p) => (
             <button
@@ -152,7 +148,6 @@ function AiAssistant() {
           ))}
         </div>
 
-        {/* Chat Messages Window */}
         <div
           style={{
             flex: 1,
@@ -207,8 +202,7 @@ function AiAssistant() {
                       color: "#c4b5fd",
                       fontWeight: 700,
                     }}
-                  >
-                    AI-generated
+                  > AI-generated
                   </span>
                   {m.toolsUsed?.map((t) => (
                     <span
@@ -222,7 +216,7 @@ function AiAssistant() {
                         fontFamily: "monospace",
                       }}
                     >
-                      🛠 {t}()
+                      {t}()
                     </span>
                   ))}
                 </div>
@@ -231,13 +225,11 @@ function AiAssistant() {
             </div>
           ))}
           {loading && (
-            <div style={{ color: "#a78bfa", fontSize: "13px" }}>
-              ✨ Running HR tools & generating response (15s timeout active)...
+            <div style={{ color: "#a78bfa", fontSize: "13px" }}> Running HR tools and generating response (15s timeout active)...
             </div>
           )}
         </div>
 
-        {/* Input Box */}
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -249,7 +241,7 @@ function AiAssistant() {
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask in English or Roman Urdu (e.g. 'Mera leave balance kya hai?' or 'Show late comers')..."
+            placeholder="Ask about attendance, leave balances, payroll, or company policies..."
             style={{
               flex: 1,
               padding: "12px 16px",
@@ -272,8 +264,7 @@ function AiAssistant() {
               fontWeight: 700,
               cursor: "pointer",
             }}
-          >
-            Send
+          > Send
           </button>
         </form>
       </div>

@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap');
 
-/* ── Page shell ── */
+/*  Page shell  */
 .login-container {
   min-height: 100vh;
   display: flex;
@@ -28,7 +28,7 @@
   padding: 2rem;
 }
 
-/* ── Card ── */
+/*  Card  */
 .login-form {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -50,7 +50,7 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ── Title ── */
+/*  Title  */
 .login-title {
   font-family: 'Syne', sans-serif;
   font-size: 2.6rem;
@@ -65,7 +65,7 @@
   background-clip: text;
 }
 
-/* ── Inputs ── */
+/*  Inputs  */
 .login-input {
   width: 100%;
   box-sizing: border-box;
@@ -93,7 +93,7 @@
   box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.12);
 }
 
-/* ── Login button ── */
+/*  Login button  */
 .login-btn {
   width: 100%;
   padding: 0.9rem 1rem;
@@ -134,13 +134,13 @@
   box-shadow: 0 2px 12px rgba(109, 58, 255, 0.4);
 }
 
-/* ── Forgot password link ── */
+/*  Forgot password link  */
 .login-forgot {
   margin-top: 1.4rem;
   font-family: 'DM Sans', sans-serif;
   font-size: 0.88rem;
   font-weight: 400;
-  /* overrides the inline style color visually via the class — 
+  /* overrides the inline style color visually via the class - 
      inline style still wins for 'color', so we nudge with opacity */
   opacity: 0.75;
   transition: opacity 0.2s;
@@ -153,9 +153,9 @@
   opacity: 1;
 }
 
-/* ═══════════════════════════════════════
-   BOOTSTRAP MODAL — dark theme override
-   ═══════════════════════════════════════ */
+/* 
+   BOOTSTRAP MODAL - dark theme override
+    */
 
 /* Backdrop */
 .login-modal .modal-backdrop,
@@ -182,7 +182,7 @@
   background: transparent;
 }
 
-/* Close button (×) */
+/* Close button (x) */
 .modal-header-custom .btn-close {
   filter: invert(1) brightness(0.6);
   transition: filter 0.2s;

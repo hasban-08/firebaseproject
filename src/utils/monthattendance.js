@@ -13,7 +13,7 @@ const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 // "15:30" -> "3:30 PM"
 export function formatHM12(hm = "") {
   const [h, m] = String(hm).split(":").map(Number);
-  if (Number.isNaN(h) || Number.isNaN(m)) return hm || "—";
+  if (Number.isNaN(h) || Number.isNaN(m)) return hm || "-";
   const suffix = h >= 12 ? "PM" : "AM";
   return `${h % 12 || 12}:${String(m).padStart(2, "0")} ${suffix}`;
 }
@@ -108,7 +108,7 @@ export function buildMonthRows({
       kind = effectiveStatus;
       label = statusLabel({ ...record, status: effectiveStatus });
       time = formatTime12(record.checkInTime);
-      checkOut = hasCheckout ? formatTime12(record.checkOutTime) : "—";
+      checkOut = hasCheckout ? formatTime12(record.checkOutTime) : "-";
       workedHours = record.workedHours ?? null;
 
       summary.present += 1;

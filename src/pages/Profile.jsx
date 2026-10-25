@@ -89,8 +89,7 @@ function Profile() {
 
             <div className="dashboard-container">
 
-                <h1 className="dashboard-title">
-                    My Profile
+                <h1 className="dashboard-title"> My Profile
                 </h1>
 
                 {!user.emailVerified && (
@@ -99,17 +98,14 @@ function Profile() {
 
                         <strong>Email Not Verified!</strong>
 
-                        <br />
-
-                        Please verify your email.
+                        <br /> Please verify your email.
 
                         <div className="mt-2">
 
                             <Button
                                 variant="warning"
                                 onClick={handleResendVerification}
-                            >
-                                Resend Verification Email
+                            > Resend Verification Email
                             </Button>
 
                         </div>
@@ -141,8 +137,7 @@ function Profile() {
 
                     )}
 
-                    <h2 className="profile-welcome">
-                        Welcome Back
+                    <h2 className="profile-welcome"> Welcome Back
                     </h2>
 
                     <p className="profile-name">
@@ -158,15 +153,13 @@ function Profile() {
                         <Button
                             variant="primary"
                             onClick={() => setShow(true)}
-                        >
-                            Update Profile
+                        > Update Profile
                         </Button>
 
                         <Button
                             variant="danger"
                             onClick={handleLogout}
-                        >
-                            Logout
+                        > Logout
                         </Button>
 
                     </div>
@@ -180,9 +173,7 @@ function Profile() {
 
                     <Modal.Header closeButton>
 
-                        <Modal.Title>
-
-                            Update Profile
+                        <Modal.Title> Update Profile
 
                         </Modal.Title>
 
@@ -211,15 +202,13 @@ function Profile() {
                         <Button
                             variant="secondary"
                             onClick={() => setShow(false)}
-                        >
-                            Close
+                        > Close
                         </Button>
 
                         <Button
                             variant="primary"
                             onClick={handleSave}
-                        >
-                            Save Changes
+                        > Save Changes
                         </Button>
 
                     </Modal.Footer>

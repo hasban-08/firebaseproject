@@ -124,11 +124,10 @@ function MyAttendance() {
           <button
             className="my-attendance-back-btn"
             onClick={() => navigate("/mark-attendance")}
-          >
-            Self Check-In / Correction
+          > Self Check-In / Correction
           </button>
           <button className="my-attendance-back-btn" onClick={() => navigate("/")}>
-            ← Back
+            <- Back
           </button>
         </div>
       </header>
@@ -137,8 +136,7 @@ function MyAttendance() {
         <div className="my-attendance-hero-glow" />
         <p className="my-attendance-hero-date">Monthly Attendance Record</p>
         <h1 className="my-attendance-hero-title">Your Attendance History</h1>
-        <p className="my-attendance-hero-sub">
-          Present, Late (&gt;09:15), Half-Day (&lt;5h), Missing Checkout, Absent & Approved Leaves.
+        <p className="my-attendance-hero-sub"> Present, Late (&gt;09:15), Half-Day (&lt;5h), Missing Checkout, Absent & Approved Leaves.
         </p>
       </section>
 
@@ -157,22 +155,18 @@ function MyAttendance() {
             {rows.length > 0 && (
               <div className="my-attendance-export-bar">
                 <button onClick={() => exportMonthToCSV(rows, fileName)}>CSV</button>
-                <button onClick={() => exportMonthToExcel(rows, fileName)}>
-                  Excel
+                <button onClick={() => exportMonthToExcel(rows, fileName)}> Excel
                 </button>
                 <button
-                  onClick={() =>
-                    exportMonthToPDF(
+                  onClick={() => exportMonthToPDF(
                       rows,
                       fileName,
                       `${userName || "My"} attendance - ${selectedMonth}`
                     )
                   }
-                >
-                  PDF
+                > PDF
                 </button>
-                <button onClick={() => printElement("my-attendance-table")}>
-                  Print
+                <button onClick={() => printElement("my-attendance-table")}> Print
                 </button>
               </div>
             )}
@@ -212,10 +206,10 @@ function MyAttendance() {
                       <tr key={r.date}>
                         <td>{r.date}</td>
                         <td>{r.day}</td>
-                        <td>{r.time || "—"}</td>
-                        <td>{r.checkOut || "—"}</td>
+                        <td>{r.time || "-"}</td>
+                        <td>{r.checkOut || "-"}</td>
                         <td className={kindClass(r.kind)}>{r.label}</td>
-                        <td>{r.note || "—"}</td>
+                        <td>{r.note || "-"}</td>
                       </tr>
                     ))}
                   </tbody>

@@ -8,15 +8,15 @@ import { formatTime12, statusLabel } from "./attendanceHelpers";
 // -----------------------------------------
 function formatRow(r) {
   return {
-    date: r.date || "—",
-    time: r.checkInTime ? formatTime12(r.checkInTime) : "—",
-    checkOut: r.checkOutTime ? formatTime12(r.checkOutTime) : "—",
+    date: r.date || "-",
+    time: r.checkInTime ? formatTime12(r.checkInTime) : "-",
+    checkOut: r.checkOutTime ? formatTime12(r.checkOutTime) : "-",
     status: statusLabel(r),
   };
 }
 
 // -----------------------------------------
-// Attendance → CSV
+// Attendance -> CSV
 // -----------------------------------------
 export function exportToCSV(records, filename) {
   const header = "Date,Check-in Time,Check-out Time,Status\n";
@@ -43,7 +43,7 @@ export function exportToCSV(records, filename) {
 }
 
 // -----------------------------------------
-// Attendance → Excel
+// Attendance -> Excel
 // -----------------------------------------
 export function exportToExcel(records, filename) {
   const data = records.map((r) => {
@@ -65,14 +65,14 @@ export function exportToExcel(records, filename) {
 }
 
 // -----------------------------------------
-// Daily Attendance → Excel
+// Daily Attendance -> Excel
 // -----------------------------------------
 export function exportDailyToExcel(rows, filename) {
   const data = rows.map((r) => ({
-    Employee: r.name || "—",
-    Status: r.displayStatus || "—",
-    "Check-in Time": r.time || "—",
-    "Check-out Time": r.checkOut || "—",
+    Employee: r.name || "-",
+    Status: r.displayStatus || "-",
+    "Check-in Time": r.time || "-",
+    "Check-out Time": r.checkOut || "-",
   }));
 
   const worksheet = XLSX.utils.json_to_sheet(data);
@@ -83,11 +83,11 @@ export function exportDailyToExcel(rows, filename) {
 }
 
 // -----------------------------------------
-// Monthly Payroll → Excel
+// Monthly Payroll -> Excel
 // -----------------------------------------
 export function exportPayrollToExcel(rows, filename) {
   const data = rows.map((r) => ({
-    Name: r.name || "—",
+    Name: r.name || "-",
     Department: r.department || "General",
     "Basic Salary": r.basicSalary ?? 0,
     "Allowances (50%)": r.allowances ?? 0,
@@ -96,11 +96,11 @@ export function exportPayrollToExcel(rows, filename) {
     "Income Tax": r.taxDeduction ?? 0,
     "Net Salary": r.netSalary ?? 0,
     Status: r.status || "draft",
-    "Payment Method": r.method || "—",
-    "Bank/Wallet": r.providerName || "—",
-    "Account Title": r.accountTitle || "—",
-    "Account Number": r.accountNumber || "—",
-    IBAN: r.iban || "—",
+    "Payment Method": r.method || "-",
+    "Bank/Wallet": r.providerName || "-",
+    "Account Title": r.accountTitle || "-",
+    "Account Number": r.accountNumber || "-",
+    IBAN: r.iban || "-",
   }));
 
   const worksheet = XLSX.utils.json_to_sheet(data);
@@ -111,7 +111,7 @@ export function exportPayrollToExcel(rows, filename) {
 }
 
 // -----------------------------------------
-// Employee Payslip → PDF (Brief P1 Requirement)
+// Employee Payslip -> PDF (Brief P1 Requirement)
 // -----------------------------------------
 export function exportPayslipToPDF(payslip, companyName = "WorkPulse Technologies") {
   const pdfDoc = new jsPDF({
@@ -131,7 +131,7 @@ export function exportPayslipToPDF(payslip, companyName = "WorkPulse Technologie
 
   pdfDoc.setFontSize(11);
   pdfDoc.setFont("helvetica", "normal");
-  pdfDoc.text(`Official Monthly Salary Slip — ${payslip.month || ""}`, 14, 24);
+  pdfDoc.text(`Official Monthly Salary Slip - ${payslip.month || ""}`, 14, 24);
   pdfDoc.text(
     `Status: ${String(payslip.status || "FINALIZED").toUpperCase()}`,
     14,
@@ -160,7 +160,7 @@ export function exportPayslipToPDF(payslip, companyName = "WorkPulse Technologie
         "Designation",
         payslip.designation || "Staff",
         "Pay Period",
-        payslip.month || "—",
+        payslip.month || "-",
       ],
       [
         "Working Days",
@@ -172,7 +172,7 @@ export function exportPayslipToPDF(payslip, companyName = "WorkPulse Technologie
         "Late / Half-Days",
         `${payslip.lateCount ?? 0} / ${payslip.halfDayCount ?? 0}`,
         "Bank / Account",
-        `${payslip.providerName || "Bank"} - ${payslip.accountNumber || "—"}`,
+        `${payslip.providerName || "Bank"} - ${payslip.accountNumber || "-"}`,
       ],
     ],
   });
@@ -272,8 +272,7 @@ export function printElement(elementId) {
   const printWindow = window.open("", "_blank");
   printWindow.document.write(`
     <html><head><title>Attendance</title>
-    <style>
-      body { font-family: sans-serif; padding: 20px; }
+    <style> body { font-family: sans-serif; padding: 20px; }
       table { width: 100%; border-collapse: collapse; }
       th, td { border: 1px solid #333; padding: 8px; text-align: left; }
       th { background: #f1f5f9; }
@@ -288,20 +287,20 @@ export function printElement(elementId) {
 
 function buildDirectoryRows(employees) {
   return employees.map((emp) => ({
-    Name: emp.name || "—",
-    Email: emp.email || "—",
-    Role: emp.role || "—",
+    Name: emp.name || "-",
+    Email: emp.email || "-",
+    Role: emp.role || "-",
     Department: emp.department || "General",
-    Designation: emp.designation || "—",
-    Phone: emp.personalInfo?.phone || "—",
-    CNIC: emp.personalInfo?.cnic || "—",
-    DOB: emp.personalInfo?.dob || "—",
-    Address: emp.personalInfo?.address || "—",
-    "Payment Method": emp.bankDetails?.method || "—",
-    "Bank/Wallet": emp.bankDetails?.providerName || "—",
-    "Account Title": emp.bankDetails?.accountTitle || "—",
-    "Account Number": emp.bankDetails?.accountNumber || "—",
-    IBAN: emp.bankDetails?.iban || "—",
+    Designation: emp.designation || "-",
+    Phone: emp.personalInfo?.phone || "-",
+    CNIC: emp.personalInfo?.cnic || "-",
+    DOB: emp.personalInfo?.dob || "-",
+    Address: emp.personalInfo?.address || "-",
+    "Payment Method": emp.bankDetails?.method || "-",
+    "Bank/Wallet": emp.bankDetails?.providerName || "-",
+    "Account Title": emp.bankDetails?.accountTitle || "-",
+    "Account Number": emp.bankDetails?.accountNumber || "-",
+    IBAN: emp.bankDetails?.iban || "-",
   }));
 }
 
@@ -312,8 +311,7 @@ export function exportDirectoryToCSV(employees, filename) {
 
   const csvRows = [
     headers.map((header) => `"${header}"`).join(","),
-    ...rows.map((row) =>
-      headers
+    ...rows.map((row) => headers
         .map((header) => `"${String(row[header]).replace(/"/g, '""')}"`)
         .join(",")
     ),

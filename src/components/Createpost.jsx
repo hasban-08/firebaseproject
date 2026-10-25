@@ -64,8 +64,7 @@ function CreatePost() {
 
         <div className="cp-wrapper">
 
-            <h3 className="cp-title">
-                Create New Post
+            <h3 className="cp-title"> Create New Post
             </h3>
 
             <div className="cp-card">
@@ -95,9 +94,9 @@ function CreatePost() {
                 <div className="cp-field-group">
                     <label className="cp-label">Attach Image</label>
                     <label className="cp-file-label">
-                        <span className="cp-file-icon">🖼️</span>
+                        <span className="cp-file-icon"></span>
                         <span className="cp-file-text">
-                            {image ? "Image Selected ✓" : "Choose an image..."}
+                            {image ? "Image Selected " : "Choose an image..."}
                         </span>
                         <input
                             id="postImage"
@@ -130,8 +129,7 @@ function CreatePost() {
                 >
                     {loading ? (
                         <>
-                            <span className="cp-spinner" />
-                            Posting...
+                            <span className="cp-spinner" /> Posting...
                         </>
                     ) : (
                         "Create Post"

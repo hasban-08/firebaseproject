@@ -132,7 +132,7 @@ function PostCard({ post }) {
     return (
         <div className="pc-card">
 
-            {/* ── User info ── */}
+            {/*  User info  */}
             <div className="pc-user-row">
                 <div className="pc-user-left">
                     {post.photoURL ? (
@@ -158,7 +158,7 @@ function PostCard({ post }) {
 
             <div className="pc-divider" />
 
-            {/* ── Content ── */}
+            {/*  Content  */}
             {post.title && <h4 className="pc-title">{post.title}</h4>}
             <p className="pc-description">{post.description}</p>
 
@@ -171,14 +171,14 @@ function PostCard({ post }) {
                 />
             )}
 
-            {/* ── Action buttons ── */}
+            {/*  Action buttons  */}
             <div className="pc-actions">
 
                 <button
                     className={`pc-btn pc-btn-like ${liked ? "pc-btn-liked" : ""}`}
                     onClick={handleLike}
                 >
-                    {liked ? "❤️" : "🤍"}
+                    {liked ? "" : ""}
                     <span>{liked ? "Liked" : "Like"}</span>
                     <span className="pc-count">({likes})</span>
                 </button>
@@ -221,11 +221,10 @@ function PostCard({ post }) {
                 )}
             </div>
 
-            {/* ── Comments accordion ── */}
+            {/*  Comments accordion  */}
             <Accordion className="pc-accordion">
                 <Accordion.Item className="pc-accordion-item" eventKey="0">
-                    <Accordion.Header className="pc-accordion-header">
-                        💬 Comments ({comments.length})
+                    <Accordion.Header className="pc-accordion-header"> Comments ({comments.length})
                     </Accordion.Header>
                     <Accordion.Body className="pc-accordion-body">
 
@@ -279,7 +278,7 @@ function PostCard({ post }) {
                 </Accordion.Item>
             </Accordion>
 
-            {/* ── Edit Modal ── */}
+            {/*  Edit Modal  */}
             <Modal className="pc-modal" show={showEdit} onHide={() => setShowEdit(false)}>
                 <Modal.Header className="pc-modal-header" closeButton>
                     <Modal.Title className="pc-modal-title">Edit Post</Modal.Title>
@@ -300,11 +299,9 @@ function PostCard({ post }) {
                     />
                 </Modal.Body>
                 <Modal.Footer className="pc-modal-footer">
-                    <Button variant="secondary" className="pc-modal-cancel" onClick={() => setShowEdit(false)}>
-                        Cancel
+                    <Button variant="secondary" className="pc-modal-cancel" onClick={() => setShowEdit(false)}> Cancel
                     </Button>
-                    <Button className="pc-modal-save" onClick={handleUpdate}>
-                        Save Changes
+                    <Button className="pc-modal-save" onClick={handleUpdate}> Save Changes
                     </Button>
                 </Modal.Footer>
             </Modal>

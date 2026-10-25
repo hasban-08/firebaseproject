@@ -60,8 +60,7 @@ function Login() {
   return (
     <div className="login-container">
       <h1 className="login-title">WorkPulse HR Portal</h1>
-      <p style={{ color: "#94a3b8", fontSize: "13px", marginBottom: "18px", textAlign: "center" }}>
-        Sign in with your company credentials issued by Admin / HR
+      <p style={{ color: "#94a3b8", fontSize: "13px", marginBottom: "18px", textAlign: "center" }}> Sign in with your company credentials issued by Admin / HR
       </p>
 
       {!setupInitialized && (
@@ -75,8 +74,7 @@ function Login() {
             textAlign: "center",
           }}
         >
-          <p style={{ margin: "0 0 8px", fontSize: "13px", color: "#ddd6fe" }}>
-            Fresh installation detected! Initialize your company settings and Admin account first.
+          <p style={{ margin: "0 0 8px", fontSize: "13px", color: "#ddd6fe" }}> Fresh installation detected! Initialize your company settings and Admin account first.
           </p>
           <button
             type="button"
@@ -91,8 +89,7 @@ function Login() {
               fontWeight: 600,
               cursor: "pointer",
             }}
-          >
-            Go to First-Run Setup
+          > Go to First-Run Setup
           </button>
         </div>
       )}
@@ -148,12 +145,10 @@ function Login() {
         className="login-forgot"
         style={{ color: "#a78bfa", cursor: "pointer", marginTop: "14px" }}
         onClick={() => setShow(true)}
-      >
-        Forgot Password?
+      > Forgot Password?
       </p>
 
-      <p style={{ color: "rgba(240, 238, 255, 0.45)", fontSize: "12px", marginTop: "8px" }}>
-        Public signup is disabled. Accounts are provisioned exclusively by Admin & HR.
+      <p style={{ color: "rgba(240, 238, 255, 0.45)", fontSize: "12px", marginTop: "8px" }}> Public signup is disabled. Accounts are provisioned exclusively by Admin & HR.
       </p>
 
       <Modal className="login-modal" show={show} onHide={() => setShow(false)}>
@@ -172,12 +167,10 @@ function Login() {
         </Modal.Body>
 
         <Modal.Footer className="modal-footer-custom">
-          <Button variant="secondary" onClick={() => setShow(false)}>
-            Close
+          <Button variant="secondary" onClick={() => setShow(false)}> Close
           </Button>
 
-          <Button variant="primary" onClick={handleReset}>
-            Send Reset Link
+          <Button variant="primary" onClick={handleReset}> Send Reset Link
           </Button>
         </Modal.Footer>
       </Modal>

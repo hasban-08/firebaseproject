@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap');
 
-/* ── Page shell ── */
+/*  Page shell  */
 .dashboard-container {
   min-height: 100vh;
   display: flex;
@@ -27,7 +27,7 @@
   gap: 1rem;
 }
 
-/* ── Page title ── */
+/*  Page title  */
 .dashboard-title {
   font-family: 'Syne', sans-serif;
   font-size: 2.8rem;
@@ -46,9 +46,9 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ══════════════════════════════════
+/* 
    Email verification banner
-   ══════════════════════════════════ */
+    */
 .verify-banner {
   width: 100%;
   max-width: 440px;
@@ -98,7 +98,7 @@
   transform: translateY(0) !important;
 }
 
-/* ── Profile card ── */
+/*  Profile card  */
 .profile-card {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -119,7 +119,7 @@
   animation: fadeUp 0.6s 0.1s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-/* ── Avatar (photo) ── */
+/*  Avatar (photo)  */
 .profile-avatar {
   width: 90px !important;
   height: 90px !important;
@@ -130,7 +130,7 @@
   margin-bottom: 0.8rem;
 }
 
-/* ── Avatar placeholder ── */
+/*  Avatar placeholder  */
 .profile-avatar-placeholder {
   width: 90px;
   height: 90px;
@@ -149,7 +149,7 @@
   letter-spacing: -0.02em;
 }
 
-/* ── Welcome text ── */
+/*  Welcome text  */
 .profile-welcome {
   font-family: 'DM Sans', sans-serif;
   font-size: 0.85rem;
@@ -160,7 +160,7 @@
   margin: 0;
 }
 
-/* ── Display name ── */
+/*  Display name  */
 .profile-name {
   font-family: 'Syne', sans-serif;
   font-size: 1.7rem;
@@ -173,7 +173,7 @@
   background-clip: text;
 }
 
-/* ── Email ── */
+/*  Email  */
 .profile-email {
   font-family: 'DM Sans', sans-serif;
   font-size: 0.88rem;
@@ -182,7 +182,7 @@
   margin: 0 0 1.2rem;
 }
 
-/* ── Action buttons row ── */
+/*  Action buttons row  */
 .dashboard-actions {
   display: flex;
   gap: 0.75rem;
@@ -243,9 +243,9 @@
   transform: translateY(0) !important;
 }
 
-/* ═══════════════════════════════════════
-   BOOTSTRAP MODAL — dark theme override
-   ═══════════════════════════════════════ */
+/* 
+   BOOTSTRAP MODAL - dark theme override
+    */
 .dashboard-modal .modal-content {
   background: #13121e;
   border: 1px solid rgba(167, 139, 250, 0.2);

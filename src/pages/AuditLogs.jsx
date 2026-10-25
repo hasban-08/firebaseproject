@@ -50,8 +50,7 @@ function actionBadgeStyle(action = "") {
 function renderCleanKeyValuePills(dataObj, tone = "after") {
   if (!dataObj || typeof dataObj !== "object") {
     return (
-      <span style={{ color: "#64748b", fontStyle: "italic", fontSize: "12px" }}>
-        None (Initial State)
+      <span style={{ color: "#64748b", fontStyle: "italic", fontSize: "12px" }}> None (Initial State)
       </span>
     );
   }
@@ -60,8 +59,7 @@ function renderCleanKeyValuePills(dataObj, tone = "after") {
   );
   if (entries.length === 0) {
     return (
-      <span style={{ color: "#64748b", fontStyle: "italic", fontSize: "12px" }}>
-        Empty state
+      <span style={{ color: "#64748b", fontStyle: "italic", fontSize: "12px" }}> Empty state
       </span>
     );
   }
@@ -192,10 +190,10 @@ function AuditLogs() {
       });
       await loadAuditTrail();
       setStatusBanner(
-        "✅ Live verification event recorded in the Immutable Audit Trail!"
+        " Live verification event recorded in the Immutable Audit Trail!"
       );
     } catch (err) {
-      setStatusBanner(`⚠️ ${err.message}`);
+      setStatusBanner(` ${err.message}`);
     } finally {
       setTestingAudit(false);
     }
@@ -262,15 +260,12 @@ function AuditLogs() {
 
   // KPI metrics
   const totalCount = logs.length;
-  const attCount = logs.filter((l) =>
-    String(l.entity || "").includes("attendance")
+  const attCount = logs.filter((l) => String(l.entity || "").includes("attendance")
   ).length;
-  const leaveCount = logs.filter((l) =>
-    String(l.entity || "").includes("leave")
+  const leaveCount = logs.filter((l) => String(l.entity || "").includes("leave")
   ).length;
   const payrollSecCount = logs.filter(
-    (l) =>
-      String(l.entity || "").includes("payroll") ||
+    (l) => String(l.entity || "").includes("payroll") ||
       String(l.entity || "").includes("users") ||
       String(l.entity || "").includes("settings")
   ).length;
@@ -315,12 +310,11 @@ function AuditLogs() {
               boxShadow: "0 4px 16px rgba(16, 185, 129, 0.35)",
             }}
           >
-            🛡
+            
           </div>
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <h1 style={{ fontSize: "18px", fontWeight: 700, margin: 0 }}>
-                Immutable System Audit Trail
+              <h1 style={{ fontSize: "18px", fontWeight: 700, margin: 0 }}> Immutable System Audit Trail
               </h1>
               <span
                 style={{
@@ -331,12 +325,10 @@ function AuditLogs() {
                   color: "#6ee7b7",
                   fontWeight: 700,
                 }}
-              >
-                ● LIVE STREAM
+              > LIVE STREAM
               </span>
             </div>
-            <span style={{ fontSize: "12px", color: "#94a3b8" }}>
-              Append-Only Security Log · Actor, Action, Entity & Before/After State Diffs
+            <span style={{ fontSize: "12px", color: "#94a3b8" }}> Append-Only Security Log | Actor, Action, Entity & Before/After State Diffs
             </span>
           </div>
         </div>
@@ -357,7 +349,7 @@ function AuditLogs() {
               cursor: "pointer",
             }}
           >
-            {testingAudit ? "Recording..." : "✓ Verify Audit Log"}
+            {testingAudit ? "Recording..." : " Verify Audit Log"}
           </button>
           <button
             type="button"
@@ -372,8 +364,7 @@ function AuditLogs() {
               fontSize: "12.5px",
               cursor: "pointer",
             }}
-          >
-            ⬇ Export CSV
+          > Export CSV
           </button>
           <button
             type="button"
@@ -388,7 +379,7 @@ function AuditLogs() {
               cursor: "pointer",
             }}
           >
-            ← Back to Dashboard
+            <- Back to Dashboard
           </button>
         </div>
       </header>
@@ -429,14 +420,12 @@ function AuditLogs() {
               padding: "16px",
             }}
           >
-            <div style={{ fontSize: "12px", color: "#94a3b8" }}>
-              Total Immutable Events
+            <div style={{ fontSize: "12px", color: "#94a3b8" }}> Total Immutable Events
             </div>
             <div style={{ fontSize: "26px", fontWeight: 800, marginTop: "4px" }}>
               {totalCount}
             </div>
-            <div style={{ fontSize: "11px", color: "#a78bfa", marginTop: "4px" }}>
-              Append-only (`update/delete: false`)
+            <div style={{ fontSize: "11px", color: "#a78bfa", marginTop: "4px" }}> Append-only (`update/delete: false`)
             </div>
           </div>
 
@@ -449,14 +438,12 @@ function AuditLogs() {
               padding: "16px",
             }}
           >
-            <div style={{ fontSize: "12px", color: "#94a3b8" }}>
-              Attendance & Check-In Logs
+            <div style={{ fontSize: "12px", color: "#94a3b8" }}> Attendance & Check-In Logs
             </div>
             <div style={{ fontSize: "26px", fontWeight: 800, marginTop: "4px" }}>
               {attCount}
             </div>
-            <div style={{ fontSize: "11px", color: "#6ee7b7", marginTop: "4px" }}>
-              Self Check-In/Out & HR Overrides
+            <div style={{ fontSize: "11px", color: "#6ee7b7", marginTop: "4px" }}> Self Check-In/Out & HR Overrides
             </div>
           </div>
 
@@ -469,14 +456,12 @@ function AuditLogs() {
               padding: "16px",
             }}
           >
-            <div style={{ fontSize: "12px", color: "#94a3b8" }}>
-              Leave & Approval Events
+            <div style={{ fontSize: "12px", color: "#94a3b8" }}> Leave & Approval Events
             </div>
             <div style={{ fontSize: "26px", fontWeight: 800, marginTop: "4px" }}>
               {leaveCount}
             </div>
-            <div style={{ fontSize: "11px", color: "#fcd34d", marginTop: "4px" }}>
-              Applications, Approvals & Rejections
+            <div style={{ fontSize: "11px", color: "#fcd34d", marginTop: "4px" }}> Applications, Approvals & Rejections
             </div>
           </div>
 
@@ -489,14 +474,12 @@ function AuditLogs() {
               padding: "16px",
             }}
           >
-            <div style={{ fontSize: "12px", color: "#94a3b8" }}>
-              Payroll, Users & Settings
+            <div style={{ fontSize: "12px", color: "#94a3b8" }}> Payroll, Users & Settings
             </div>
             <div style={{ fontSize: "26px", fontWeight: 800, marginTop: "4px" }}>
               {payrollSecCount}
             </div>
-            <div style={{ fontSize: "11px", color: "#7dd3fc", marginTop: "4px" }}>
-              Salary Runs, Roles & Security
+            <div style={{ fontSize: "11px", color: "#7dd3fc", marginTop: "4px" }}> Salary Runs, Roles & Security
             </div>
           </div>
         </div>
@@ -557,7 +540,7 @@ function AuditLogs() {
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="🔍 Search by employee name, action, entity ID, or status..."
+            placeholder=" Search by employee name, action, entity ID, or status..."
             style={{
               flex: "1 1 280px",
               padding: "9px 14px",
@@ -583,8 +566,7 @@ function AuditLogs() {
               }}
             >
               {actions.map((a) => (
-                <option key={a} value={a}>
-                  Action: {a}
+                <option key={a} value={a}> Action: {a}
                 </option>
               ))}
             </select>
@@ -607,8 +589,7 @@ function AuditLogs() {
               <option value="employee">Role: Employee</option>
             </select>
 
-            <span style={{ fontSize: "12.5px", color: "#94a3b8" }}>
-              Showing <strong>{filtered.length}</strong> of {logs.length} events
+            <span style={{ fontSize: "12.5px", color: "#94a3b8" }}> Showing <strong>{filtered.length}</strong> of {logs.length} events
             </span>
           </div>
         </div>
@@ -623,8 +604,7 @@ function AuditLogs() {
               background: "rgba(15, 23, 42, 0.6)",
               borderRadius: "14px",
             }}
-          >
-            Loading real-time audit trail...
+          > Loading real-time audit trail...
           </div>
         ) : filtered.length === 0 ? (
           <div
@@ -637,8 +617,7 @@ function AuditLogs() {
               border: "1px solid rgba(255,255,255,0.08)",
             }}
           >
-            <p style={{ margin: "0 0 12px", fontSize: "14px" }}>
-              No matching audit events found for the current filter.
+            <p style={{ margin: "0 0 12px", fontSize: "14px" }}> No matching audit events found for the current filter.
             </p>
             <button
               type="button"
@@ -657,8 +636,7 @@ function AuditLogs() {
                 cursor: "pointer",
                 fontWeight: 600,
               }}
-            >
-              Reset Filters
+            > Reset Filters
             </button>
           </div>
         ) : (
@@ -711,7 +689,7 @@ function AuditLogs() {
                       </span>
 
                       <span style={{ fontSize: "13.5px", fontWeight: 700, color: "#f8fafc" }}>
-                        👤 {log.actorName || "User"}
+                         {log.actorName || "User"}
                       </span>
 
                       <span
@@ -728,8 +706,7 @@ function AuditLogs() {
                         {log.actorRole || "user"}
                       </span>
 
-                      <span style={{ fontSize: "12px", color: "#94a3b8" }}>
-                        Entity: <strong style={{ color: "#e2e8f0" }}>{log.entity}</strong>{" "}
+                      <span style={{ fontSize: "12px", color: "#94a3b8" }}> Entity: <strong style={{ color: "#e2e8f0" }}>{log.entity}</strong>{" "}
                         {log.entityId ? (
                           <code style={{ color: "#a78bfa" }}>#{log.entityId.slice(0, 18)}</code>
                         ) : (
@@ -740,12 +717,11 @@ function AuditLogs() {
 
                     <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                       <span style={{ fontSize: "12px", color: "#94a3b8" }}>
-                        🕒 {log.dateFormatted || "Recorded"}
+                         {log.dateFormatted || "Recorded"}
                       </span>
                       <button
                         type="button"
-                        onClick={() =>
-                          setRawJsonOpen((prev) => ({
+                        onClick={() => setRawJsonOpen((prev) => ({
                             ...prev,
                             [log.id]: !prev[log.id],
                           }))
@@ -789,8 +765,7 @@ function AuditLogs() {
                           marginBottom: "6px",
                           letterSpacing: "0.04em",
                         }}
-                      >
-                        PREVIOUS STATE (BEFORE)
+                      > PREVIOUS STATE (BEFORE)
                       </div>
                       {renderCleanKeyValuePills(log.before, "before")}
                     </div>
@@ -811,8 +786,7 @@ function AuditLogs() {
                           marginBottom: "6px",
                           letterSpacing: "0.04em",
                         }}
-                      >
-                        UPDATED STATE (AFTER)
+                      > UPDATED STATE (AFTER)
                       </div>
                       {renderCleanKeyValuePills(log.after, "after")}
                     </div>

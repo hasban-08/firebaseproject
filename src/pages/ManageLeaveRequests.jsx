@@ -90,15 +90,13 @@ function ManageLeaveRequests() {
               strokeLinecap="round"
               strokeLinejoin="round"
             />
-          </svg>
-          Back
+          </svg> Back
         </button>
       </header>
 
       <section className="manage-leaves-panel">
         <div className="manage-leaves-toolbar">
-          <label>
-            Filter Status
+          <label> Filter Status
             <select
               className="manage-leaves-select"
               value={filter}
@@ -117,8 +115,7 @@ function ManageLeaveRequests() {
             className="manage-leaves-refresh"
             onClick={loadRequests}
             disabled={loading}
-          >
-            Refresh
+          > Refresh
           </button>
         </div>
 
@@ -177,13 +174,11 @@ function ManageLeaveRequests() {
 
                 {request.status === "pending" && (
                   <div className="manage-leaves-review-sec">
-                    <label className="manage-leaves-comment">
-                      HR / Admin Comment
+                    <label className="manage-leaves-comment"> HR / Admin Comment
                       <textarea
                         rows={2}
                         value={comments[request.id] || ""}
-                        onChange={(e) =>
-                          setComments((prev) => ({
+                        onChange={(e) => setComments((prev) => ({
                             ...prev,
                             [request.id]: e.target.value,
                           }))
@@ -207,8 +202,7 @@ function ManageLeaveRequests() {
                         className="manage-leaves-reject"
                         disabled={busyId === request.id}
                         onClick={() => updateRequest(request, "rejected")}
-                      >
-                        Reject
+                      > Reject
                       </button>
                     </div>
                   </div>

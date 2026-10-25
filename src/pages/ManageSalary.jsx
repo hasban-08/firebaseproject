@@ -167,9 +167,7 @@ function ManageSalary() {
   const isPrivileged = ["admin", "hr"].includes(myRole);
 
   const handleFieldChange = (uid, value) => {
-    setEmployees((previous) =>
-      previous.map((employee) =>
-        employee.uid === uid
+    setEmployees((previous) => previous.map((employee) => employee.uid === uid
           ? { ...employee, basicSalary: value, salary: value }
           : employee
       )
@@ -264,10 +262,10 @@ function ManageSalary() {
         taxDeduction: s.taxDeduction ?? 0,
         netSalary: s.netSalary ?? 0,
         status: payrollDocs[emp.uid]?.status || "draft",
-        method: emp.bankDetails?.method || "—",
-        providerName: emp.bankDetails?.providerName || "—",
-        accountTitle: emp.bankDetails?.accountTitle || "—",
-        accountNumber: emp.bankDetails?.accountNumber || "—",
+        method: emp.bankDetails?.method || "-",
+        providerName: emp.bankDetails?.providerName || "-",
+        accountTitle: emp.bankDetails?.accountTitle || "-",
+        accountNumber: emp.bankDetails?.accountNumber || "-",
         iban: emp.bankDetails?.iban || "",
       };
     });
@@ -289,7 +287,7 @@ function ManageSalary() {
         month: selectedMonth,
         status: selectedPayrollDoc?.status || "draft",
         providerName: selectedEmp.bankDetails?.providerName || "Bank",
-        accountNumber: selectedEmp.bankDetails?.accountNumber || "—",
+        accountNumber: selectedEmp.bankDetails?.accountNumber || "-",
         ...selectedStats,
       },
       companyName
@@ -300,14 +298,14 @@ function ManageSalary() {
     <div className="salary-page">
       <header className="salary-topbar">
         <div className="salary-identity">
-          <div className="salary-avatar">₨</div>
+          <div className="salary-avatar"></div>
           <div className="salary-identity-text">
             <span className="salary-name">
               {isPrivileged ? "Payroll Engine & Payslips" : "My Monthly Payslips"}
             </span>
             <span className="salary-month-pill">
-              {selectedMonth} ·{" "}
-              {isMonthLocked ? "🔒 LOCKED" : hasDraft ? "DRAFT" : "LIVE PREVIEW"}
+              {selectedMonth} |{" "}
+              {isMonthLocked ? " LOCKED" : hasDraft ? "DRAFT" : "LIVE PREVIEW"}
             </span>
           </div>
         </div>
@@ -321,15 +319,13 @@ function ManageSalary() {
               strokeLinecap="round"
               strokeLinejoin="round"
             />
-          </svg>
-          Back
+          </svg> Back
         </button>
       </header>
 
       <section className="salary-hero">
         <div className="salary-hero-glow" />
-        <p className="salary-hero-date">
-          Formula: Gross = 1.5 × Basic · Progressive Tax Slabs · Absent / Unpaid / Half-Day / 3-Lates Penalty
+        <p className="salary-hero-date"> Formula: Gross = 1.5 x Basic | Progressive Tax Slabs | Absent / Unpaid / Half-Day / 3-Lates Penalty
         </p>
         <h1 className="salary-hero-title">
           {isPrivileged ? `Total Net Payroll (${selectedMonth})` : `My Net Pay (${selectedMonth})`}
@@ -381,7 +377,7 @@ function ManageSalary() {
               disabled={saving}
               onClick={handleFinalizeLock}
             >
-              🔒 2. Finalize & Lock Month
+               2. Finalize & Lock Month
             </button>
           )}
 
@@ -389,8 +385,7 @@ function ManageSalary() {
             <button
               className="salary-payroll-export-btn"
               onClick={handleExportPayroll}
-            >
-              Export Payroll Excel
+            > Export Payroll Excel
             </button>
           )}
         </div>
@@ -458,18 +453,17 @@ function ManageSalary() {
                       {displayNameFor(selectedEmp)}
                     </span>
                     <div style={{ fontSize: "12px", color: "#a78bfa" }}>
-                      {selectedEmp.department || "General"} —{" "}
-                      {selectedEmp.designation || "Staff"} · Status:{" "}
+                      {selectedEmp.department || "General"} -{" "}
+                      {selectedEmp.designation || "Staff"} | Status:{" "}
                       <strong>
                         {(selectedPayrollDoc?.status || "draft").toUpperCase()}
                       </strong>
                     </div>
                   </div>
 
-                  <span className="salary-emp-stats">
-                    Present: {selectedStats.presentCount ?? 0} · Late:{" "}
-                    {selectedStats.lateCount ?? 0} · Half-Day:{" "}
-                    {selectedStats.halfDayCount ?? 0} · Absent:{" "}
+                  <span className="salary-emp-stats"> Present: {selectedStats.presentCount ?? 0} | Late:{" "}
+                    {selectedStats.lateCount ?? 0} | Half-Day:{" "}
+                    {selectedStats.halfDayCount ?? 0} | Absent:{" "}
                     {selectedStats.absentCount ?? 0}
                   </span>
                 </div>
@@ -477,36 +471,31 @@ function ManageSalary() {
                 <div className="salary-breakdown">
                   <div className="salary-breakdown-row">
                     <span>Basic Salary</span>
-                    <span>
-                      Rs. {(selectedStats.basicSalary ?? 0).toLocaleString()}
+                    <span> Rs. {(selectedStats.basicSalary ?? 0).toLocaleString()}
                     </span>
                   </div>
                   <div className="salary-breakdown-row">
-                    <span>
-                      Allowances (HRA 30% + Medical 10% + Conveyance 10%)
+                    <span> Allowances (HRA 30% + Medical 10% + Conveyance 10%)
                     </span>
                     <span>
                       + Rs. {(selectedStats.allowances ?? 0).toLocaleString()}
                     </span>
                   </div>
                   <div className="salary-breakdown-row">
-                    <strong>Gross Salary (1.5 × Basic)</strong>
-                    <strong>
-                      Rs. {(selectedStats.grossSalary ?? 0).toLocaleString()}
+                    <strong>Gross Salary (1.5 x Basic)</strong>
+                    <strong> Rs. {(selectedStats.grossSalary ?? 0).toLocaleString()}
                     </strong>
                   </div>
                   <div className="salary-breakdown-row">
-                    <span>
-                      Working Days in Month / Per-Day Rate
+                    <span> Working Days in Month / Per-Day Rate
                     </span>
                     <span>
-                      {selectedStats.workingDaysInMonth ?? 22} days · Rs.{" "}
+                      {selectedStats.workingDaysInMonth ?? 22} days | Rs.{" "}
                       {(selectedStats.perDayRate ?? 0).toLocaleString()}/day
                     </span>
                   </div>
                   <div className="salary-breakdown-row">
-                    <span>
-                      Paid Leave / Unpaid Leave Days
+                    <span> Paid Leave / Unpaid Leave Days
                     </span>
                     <span>
                       {selectedStats.paidLeaveCount ?? 0} paid /{" "}
@@ -514,8 +503,7 @@ function ManageSalary() {
                     </span>
                   </div>
                   <div className="salary-breakdown-row">
-                    <span>
-                      Deductible Days (Absent + Unpaid + Half-Days + 3-Lates Penalty)
+                    <span> Deductible Days (Absent + Unpaid + Half-Days + 3-Lates Penalty)
                     </span>
                     <span>{selectedStats.deductibleOffs ?? 0} days</span>
                   </div>
@@ -536,16 +524,14 @@ function ManageSalary() {
 
                 {isPrivileged && !isMonthLocked && (
                   <div className="salary-fields">
-                    <label>
-                      Update Basic Salary (PKR)
+                    <label> Update Basic Salary (PKR)
                       <input
                         type="number"
                         min="0"
                         value={
                           selectedEmp.basicSalary ?? selectedEmp.salary ?? ""
                         }
-                        onChange={(event) =>
-                          handleFieldChange(
+                        onChange={(event) => handleFieldChange(
                             selectedEmp.uid,
                             event.target.value
                           )
@@ -557,8 +543,7 @@ function ManageSalary() {
 
                 <div className="salary-net-row">
                   <span>Net Payable Salary ({selectedMonth}):</span>
-                  <span className="salary-net-amount">
-                    Rs. {(selectedStats.netSalary ?? 0).toLocaleString()}
+                  <span className="salary-net-amount"> Rs. {(selectedStats.netSalary ?? 0).toLocaleString()}
                   </span>
                 </div>
 
@@ -578,8 +563,7 @@ function ManageSalary() {
                       background: "linear-gradient(135deg, #10b981, #059669)",
                     }}
                     onClick={handleDownloadPayslipPdf}
-                  >
-                    📄 Download Official Payslip PDF
+                  > Download Official Payslip PDF
                   </button>
 
                   {isPrivileged && !isMonthLocked && (
@@ -588,8 +572,7 @@ function ManageSalary() {
                       className="salary-save-btn"
                       style={{ flex: 1 }}
                       disabled={saving}
-                      onClick={() =>
-                        saveSalary(
+                      onClick={() => saveSalary(
                           selectedEmp.uid,
                           selectedEmp.basicSalary ?? selectedEmp.salary
                         )

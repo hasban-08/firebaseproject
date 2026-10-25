@@ -52,8 +52,7 @@ function App() {
           justifyContent: "center",
           fontSize: "15px",
         }}
-      >
-        Loading WorkPulse HR Portal...
+      > Loading WorkPulse HR Portal...
       </div>
     );
   }

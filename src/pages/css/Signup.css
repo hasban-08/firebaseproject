@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap');
 
-/* ── Page shell ── */
+/*  Page shell  */
 .signup-container {
   min-height: 100vh;
   display: flex;
@@ -27,7 +27,7 @@
   gap: 0.75rem;
 }
 
-/* ── Card ── */
+/*  Card  */
 .signup-form {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -49,7 +49,7 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ── Title ── */
+/*  Title  */
 .signup-title {
   font-family: 'Syne', sans-serif;
   font-size: 2.6rem;
@@ -64,7 +64,7 @@
   background-clip: text;
 }
 
-/* ── Inputs ── */
+/*  Inputs  */
 .signup-input {
   width: 100%;
   box-sizing: border-box;
@@ -92,7 +92,7 @@
   box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.12);
 }
 
-/* ── Already have an account link ── */
+/*  Already have an account link  */
 .login-forgot {
   font-family: 'DM Sans', sans-serif;
   font-size: 0.85rem;
@@ -110,7 +110,7 @@
   opacity: 1;
 }
 
-/* ── Signup button ── */
+/*  Signup button  */
 .signup-btn {
   width: 100%;
   padding: 0.9rem 1rem;
@@ -151,12 +151,12 @@
   box-shadow: 0 2px 12px rgba(109, 58, 255, 0.4);
 }
 
-/* ── Divider ── */
+/*  Divider  */
 .signup-container::before {
   content: '';
 }
 
-/* ── Social buttons shared base ── */
+/*  Social buttons shared base  */
 .social-btn {
   width: 100%;
   max-width: 420px;
@@ -186,7 +186,7 @@
   flex-shrink: 0;
 }
 
-/* ── Google button ── */
+/*  Google button  */
 .google-btn {
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.12);
@@ -206,7 +206,7 @@
   box-shadow: 0 6px 20px rgba(0,0,0,0.4);
 }
 
-/* ── GitHub button ── */
+/*  GitHub button  */
 .github-btn {
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.1);

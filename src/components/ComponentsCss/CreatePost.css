@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap');
 
-/* ── Wrapper ── */
+/*  Wrapper  */
 .cp-wrapper {
   width: 100%;
   max-width: 640px;
@@ -14,7 +14,7 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ── Page title ── */
+/*  Page title  */
 .cp-title {
   font-family: 'Syne', sans-serif;
   font-size: 1.9rem;
@@ -27,7 +27,7 @@
   background-clip: text;
 }
 
-/* ── Card ── */
+/*  Card  */
 .cp-card {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -44,14 +44,14 @@
   -webkit-backdrop-filter: blur(12px);
 }
 
-/* ── Field group ── */
+/*  Field group  */
 .cp-field-group {
   display: flex;
   flex-direction: column;
   gap: 0.45rem;
 }
 
-/* ── Label ── */
+/*  Label  */
 .cp-label {
   font-family: 'DM Sans', sans-serif;
   font-size: 0.78rem;
@@ -61,7 +61,7 @@
   color: rgba(255, 255, 255, 0.35);
 }
 
-/* ── Input & Textarea ── */
+/*  Input & Textarea  */
 .cp-input {
   width: 100%;
   box-sizing: border-box;
@@ -94,7 +94,7 @@
   line-height: 1.6;
 }
 
-/* ── Custom file input ── */
+/*  Custom file input  */
 .cp-file-label {
   display: flex;
   align-items: center;
@@ -132,7 +132,7 @@
   display: none;
 }
 
-/* ── Image preview ── */
+/*  Image preview  */
 .cp-preview {
   border-radius: 12px;
   overflow: hidden;
@@ -146,7 +146,7 @@
   border-radius: 12px;
 }
 
-/* ── Submit button ── */
+/*  Submit button  */
 .cp-btn {
   width: 100%;
   padding: 0.92rem 1rem;
@@ -185,7 +185,7 @@
   cursor: not-allowed;
 }
 
-/* ── Loading spinner ── */
+/*  Loading spinner  */
 .cp-spinner {
   display: inline-block;
   width: 15px;

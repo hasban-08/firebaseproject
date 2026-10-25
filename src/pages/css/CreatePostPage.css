@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap');
 
-/* ── Page wrapper ── */
+/*  Page wrapper  */
 .createpost-wrapper {
   min-height: 100vh;
   background-color: #0a0a0f;
@@ -22,7 +22,7 @@
   padding: 2.5rem 1.5rem 4rem;
 }
 
-/* ── Center column ── */
+/*  Center column  */
 .createpost-container {
   max-width: 680px;
   margin: 0 auto;

@@ -52,9 +52,9 @@ function CompleteProfile() {
           basicSalary: data.basicSalary ?? data.salary ?? 0,
           cnic: formatCnic(data.personalInfo?.cnic || ""),
           bankMethod: data.bankDetails?.method || "bank",
-          providerName: data.bankDetails?.providerName || "—",
-          accountTitle: data.bankDetails?.accountTitle || data.name || "—",
-          accountNumber: data.bankDetails?.accountNumber || "—",
+          providerName: data.bankDetails?.providerName || "-",
+          accountTitle: data.bankDetails?.accountTitle || data.name || "-",
+          accountNumber: data.bankDetails?.accountNumber || "-",
           iban: data.bankDetails?.iban || "",
         });
         setForm({
@@ -143,8 +143,7 @@ function CompleteProfile() {
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
               <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2" />
               <path d="M12 8v5M12 16h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-            </svg>
-            Please complete your contact & emergency details before continuing.
+            </svg> Please complete your contact & emergency details before continuing.
           </div>
         )}
 
@@ -161,26 +160,22 @@ function CompleteProfile() {
               color: "#cbd5e1",
               cursor: "pointer",
             }}
-          >
-            Back
+          > Back
           </button>
         </div>
-        <p className="cp-sub">
-          Update your phone number, residential address, and emergency contact. Official HR records (CNIC, Bank Account, and Salary Structure) are managed by HR/Admin.
+        <p className="cp-sub"> Update your phone number, residential address, and emergency contact. Official HR records (CNIC, Bank Account, and Salary Structure) are managed by HR/Admin.
         </p>
 
         <h2 className="cp-section-title">Editable Personal & Contact Details</h2>
         <div className="cp-fields">
-          <label>
-            Full Name
+          <label> Full Name
             <input
               value={form.fullName}
               onChange={(e) => handleChange("fullName", e.target.value)}
             />
             {errors.fullName && <span className="cp-error">{errors.fullName}</span>}
           </label>
-          <label>
-            Date of Birth
+          <label> Date of Birth
             <input
               type="date"
               min="1940-01-01"
@@ -190,8 +185,7 @@ function CompleteProfile() {
             />
             {errors.dob && <span className="cp-error">{errors.dob}</span>}
           </label>
-          <label className="cp-full-width">
-            Phone Number *
+          <label className="cp-full-width"> Phone Number *
             <input
               inputMode="tel"
               placeholder="03XX-XXXXXXX"
@@ -200,8 +194,7 @@ function CompleteProfile() {
             />
             {errors.phone && <span className="cp-error">{errors.phone}</span>}
           </label>
-          <label className="cp-full-width">
-            Residential Address *
+          <label className="cp-full-width"> Residential Address *
             <textarea
               value={form.address}
               onChange={(e) => handleChange("address", e.target.value)}
@@ -211,12 +204,10 @@ function CompleteProfile() {
         </div>
 
         <h2 className="cp-section-title">Emergency Contact</h2>
-        <p className="cp-note">
-          Family member whom the office can contact in case of emergency.
+        <p className="cp-note"> Family member whom the office can contact in case of emergency.
         </p>
         <div className="cp-fields">
-          <label>
-            Contact Name
+          <label> Contact Name
             <input
               value={form.emergencyName}
               onChange={(e) => handleChange("emergencyName", e.target.value)}
@@ -225,8 +216,7 @@ function CompleteProfile() {
               <span className="cp-error">{errors.emergencyName}</span>
             )}
           </label>
-          <label>
-            Relation
+          <label> Relation
             <select
               value={form.emergencyRelation}
               onChange={(e) => handleChange("emergencyRelation", e.target.value)}
@@ -243,8 +233,7 @@ function CompleteProfile() {
               <span className="cp-error">{errors.emergencyRelation}</span>
             )}
           </label>
-          <label className="cp-full-width">
-            Emergency Mobile Number
+          <label className="cp-full-width"> Emergency Mobile Number
             <input
               inputMode="tel"
               placeholder="03XX-XXXXXXX"
@@ -258,36 +247,31 @@ function CompleteProfile() {
         </div>
 
         <h2 className="cp-section-title">HR-Managed Official Info (Read-Only)</h2>
-        <p className="cp-note">
-          CNIC, Department, Bank Details, and Salary are maintained by HR/Admin ({role.toUpperCase()} role).
+        <p className="cp-note"> CNIC, Department, Bank Details, and Salary are maintained by HR/Admin ({role.toUpperCase()} role).
         </p>
         <div className="cp-fields">
-          <label>
-            Department & Designation
+          <label> Department & Designation
             <input
               disabled
-              value={`${hrInfo.department} — ${hrInfo.designation}`}
+              value={`${hrInfo.department} - ${hrInfo.designation}`}
               style={{ opacity: 0.65 }}
             />
           </label>
-          <label>
-            CNIC (Managed by HR)
+          <label> CNIC (Managed by HR)
             <input
               disabled
               value={hrInfo.cnic || "Pending HR entry"}
               style={{ opacity: 0.65 }}
             />
           </label>
-          <label>
-            Bank / Payment Provider
+          <label> Bank / Payment Provider
             <input
               disabled
               value={`${hrInfo.providerName} (${hrInfo.accountNumber})`}
               style={{ opacity: 0.65 }}
             />
           </label>
-          <label>
-            Basic / Gross Salary
+          <label> Basic / Gross Salary
             <input
               disabled
               value={`Basic: Rs. ${Number(hrInfo.basicSalary).toLocaleString()} | Gross: Rs. ${Math.round(

@@ -67,14 +67,11 @@ function ForceChangePassword() {
             fontWeight: 600,
             marginBottom: "10px",
           }}
-        >
-          SECURITY REQUIREMENT
+        > SECURITY REQUIREMENT
         </span>
-        <h2 style={{ fontSize: "22px", fontWeight: 700, marginBottom: "8px" }}>
-          Change Temporary Password
+        <h2 style={{ fontSize: "22px", fontWeight: 700, marginBottom: "8px" }}> Change Temporary Password
         </h2>
-        <p style={{ fontSize: "13px", color: "#94a3b8", marginBottom: "20px" }}>
-          Your account was provisioned by HR/Admin with a temporary password. You must set a new personal password before accessing the portal.
+        <p style={{ fontSize: "13px", color: "#94a3b8", marginBottom: "20px" }}> Your account was provisioned by HR/Admin with a temporary password. You must set a new personal password before accessing the portal.
         </p>
 
         {error && (
@@ -95,8 +92,7 @@ function ForceChangePassword() {
 
         <form onSubmit={handleSubmit} style={{ display: "grid", gap: "14px" }}>
           <div>
-            <label style={{ display: "block", fontSize: "13px", color: "#cbd5e1", marginBottom: "6px" }}>
-              New Password
+            <label style={{ display: "block", fontSize: "13px", color: "#cbd5e1", marginBottom: "6px" }}> New Password
             </label>
             <input
               type="password"
@@ -117,8 +113,7 @@ function ForceChangePassword() {
           </div>
 
           <div>
-            <label style={{ display: "block", fontSize: "13px", color: "#cbd5e1", marginBottom: "6px" }}>
-              Confirm New Password
+            <label style={{ display: "block", fontSize: "13px", color: "#cbd5e1", marginBottom: "6px" }}> Confirm New Password
             </label>
             <input
               type="password"
@@ -165,8 +160,7 @@ function ForceChangePassword() {
               color: "#94a3b8",
               cursor: "pointer",
             }}
-          >
-            Sign Out
+          > Sign Out
           </button>
         </form>
       </div>

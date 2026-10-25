@@ -1,18 +1,18 @@
-# 🚀 WorkPulse — AI-Powered HR, Attendance, Leave & Payroll Platform
+#  WorkPulse - AI-Powered HR, Attendance, Leave & Payroll Platform
 
 WorkPulse is a full-stack HR, Attendance, Leave Quota, Payroll, Analytics, and AI Assistant platform built with **React**, **Firebase (Auth & Firestore)**, **Vercel Serverless Functions (`firebase-admin`)**, **Recharts**, **jsPDF**, and **Google Gemini AI**.
 
 ---
 
-## ✨ Key Capabilities Implemented
+##  Key Capabilities Implemented
 
 ### 1. Security, 3 Roles & First-Run Setup (P0)
 - **3 Distinct Roles**: `admin`, `hr`, and `employee` enforced in both UI routing (`ProtectedRoute`) and server-side `firestore.rules` + `/api/*` endpoints.
-- **First-Run Setup (`/setup`)**: If `settings/company` does not exist on a fresh install, the app automatically redirects to `/setup` to configure Company Name, Office Hours (`09:00`–`18:00`), Grace Period (`15` mins), and create the initial **Admin** account.
+- **First-Run Setup (`/setup`)**: If `settings/company` does not exist on a fresh install, the app automatically redirects to `/setup` to configure Company Name, Office Hours (`09:00`-`18:00`), Grace Period (`15` mins), and create the initial **Admin** account.
 - **No Public Signup**: Accounts are provisioned exclusively by **Admin** or **HR** (`/company-settings`) with a temporary password (`mustChangePassword: true`), forcing a password change on first login (`/change-password`).
 - **Field-Level Privacy**: Employees can only edit their contact info (`phone`, `address`, `dob`, `emergencyContact`). Official HR fields (`role`, `basicSalary`, `cnic`, `bankDetails`) are strictly locked to `admin` and `hr` in `firestore.rules`.
 
-### 2. Core HR Flows — Self Check-In/Out, Quotas & Payroll (P1)
+### 2. Core HR Flows - Self Check-In/Out, Quotas & Payroll (P1)
 - **Employee Self Check-In & Check-Out (`/mark-attendance`)**:
   - Server-stamped check-in and check-out times.
   - Duplicate check-in on the same day returns **`409 Conflict`**.
@@ -27,9 +27,9 @@ WorkPulse is a full-stack HR, Attendance, Leave Quota, Payroll, Analytics, and A
   - Returns **`422 Unprocessable Entity`** on overlapping leave dates or insufficient quota balance.
   - Employees can cancel pending requests; HR/Admin can approve/reject with comments.
 - **Structured Payroll Engine & Payslip PDF (`/manage-salary`)**:
-  - Salary structure: `Gross Salary = 1.5 × Basic Salary` (`Basic` + `30% HRA` + `10% Medical` + `10% Conveyance`).
+  - Salary structure: `Gross Salary = 1.5 x Basic Salary` (`Basic` + `30% HRA` + `10% Medical` + `10% Conveyance`).
   - Deductions: `Per-Day Rate = Gross / Working Days`, deducting `Absent` days, `Unpaid` leave days, `Half-Days (0.5d)`, and Bonus Late Penalty (`3 lates = 0.5 day`), plus progressive **FBR Income Tax Slabs**.
-  - Workflow: **Generate Monthly Draft** → **Admin Finalize & Lock** (`status = "locked"`).
+  - Workflow: **Generate Monthly Draft** -> **Admin Finalize & Lock** (`status = "locked"`).
   - **Official Payslip PDF**: Every employee can download their formatted monthly Payslip PDF.
 
 ### 3. Server-Computed Analytics & Recharts Dashboards (P2)
@@ -44,7 +44,7 @@ WorkPulse is a full-stack HR, Attendance, Leave Quota, Payroll, Analytics, and A
 - **Tool-Calling HR Assistant (`/ai-assistant` & `/api/ai-chat`)**:
   - Role-scoped tools: `get_headcount`, `get_attendance_summary`, `get_late_comers`, `get_leave_summary`, `get_my_leave_balance`, `get_payroll_summary`, `search_employees`.
   - Understands **English** and **Roman Urdu**.
-- **Dashboard Executive Summarizer**: Generates 3–5 bullet points strictly from the computed dashboard metrics.
+- **Dashboard Executive Summarizer**: Generates 3-5 bullet points strictly from the computed dashboard metrics.
 - **Smart Leave NLP Parser**: Converts natural language / Roman Urdu (e.g., *"agle Monday Tuesday off chahiye, shaadi hai"*) into pre-filled leave form fields for user confirmation.
 - **Guardrails**: Server-side `GEMINI_API_KEY`, 15-second timeout, 20 requests/hour rate limit tracked in `ai_logs`, and `AI-generated` labels.
 
@@ -54,7 +54,7 @@ WorkPulse is a full-stack HR, Attendance, Leave Quota, Payroll, Analytics, and A
 
 ---
 
-## 🛠️ Local Setup & Running Instructions
+##  Local Setup & Running Instructions
 
 1. **Install Dependencies**:
    ```bash

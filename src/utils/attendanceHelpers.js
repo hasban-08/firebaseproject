@@ -67,7 +67,7 @@ export function parseDateValue(val) {
 
 export function formatTime12(date) {
   const parsedDate = parseDateValue(date);
-  if (!parsedDate) return "—";
+  if (!parsedDate) return "-";
   return parsedDate.toLocaleTimeString("en-US", {
     hour: "numeric",
     minute: "2-digit",
